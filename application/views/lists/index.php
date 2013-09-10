@@ -486,7 +486,7 @@
       var str = '';
       $('#' + which + '-dropdown option:selected').each(function () {
            str = $(this).text();
-	   id = $(this).val();
+	       id = $(this).val();
        });
       if(str != '')
       {

@@ -200,7 +200,7 @@ h2
 	/* Thumbnails */
 	.showcase-thumbnail-container /* Used for backgrounds, no other styling!!! */
 	{
-		background-color: #ccfffe; /*#ccfffe;*/
+		background-color: #ccfffe; /* wm-modified */
 	}
 	
 	.showcase-thumbnail-wrapper

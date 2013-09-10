@@ -11,7 +11,6 @@
      </div>
      <div class="innertube">
         <div id="formarea">
-           <p>form-column</p>
         </div>
      </div>
    </div>      

@@ -10,17 +10,41 @@
 <?php include_once('application/views/templates/jsandcss.php'); ?>
 <script src="<?php echo base_url();?>assets/js/useredit.js" type="text/javascript"></script>
 <body>
+ <!-- Modal -->
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <form class="form-signin">
+              <fieldset>
+                <p class="validateTips"></p>
+                <input type="text" name="uname" id="uname" class="form-control" placeholder="Username" autofocus>
+                <br />
+                <input type="text" name="email" id="email" class="form-control" placeholder="Email address">
+                <label class="checkbox">
+                      <input type="checkbox" value="remember-me"> Remember me
+                 </label>
+              </fieldset>
+            </form>
+          </div>
+          <div class="modal-footer">
+             <button class="btn btn-lg btn-primary btn-block" onclick="javascript: doLogin();">Sign in</button>            
+          </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 <!--  <div class="contentwrapper"> -->
+<!--
     <div id="user-area"></div>
-    <div id="dlg-login" title="Login Screen">
-      <form action="index.php?login/signon">
+    <h2 class="form-signin-heading">Please sign in</h2>
+      <form class="form-signin">
         <fieldset>
           <p class="validateTips">Please login.</p>
-          <label for="uname">Username</label>
-          <input type="text" name="uname" id="uname" class="text ui-widget-content ui-corner-all" />
-          <br/>
-          <label for="email">Email</label>
-          <input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" />
+          <input type="text" name="uname" id="uname" class="form-control" placeholder="Username" autofocus>
+          <input type="text" name="email" id="email" class="form-control" placeholder="Email address">
+          <label class="checkbox">
+                <input type="checkbox" value="remember-me"> Remember me
+           </label>
+           <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>            
         </fieldset>
       </form>
     </div>  
@@ -34,7 +58,8 @@
             <input type="text" name="email3" id="email3" value="" class="text ui-widget-content ui-corner-all" />
         </fieldset>
       </form>
-    </div>
+    </div>'
+-->    
 <!-- contentwrapper -->
 </body>
 </html>

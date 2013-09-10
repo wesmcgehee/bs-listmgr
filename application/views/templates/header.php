@@ -4,18 +4,31 @@
   
 <head>
     <title>My Lists</title>
-    <?php include_once('jsandcss.php'); ?>
-    <script id="scriptInit" type="text/javascript">
-	$(document).ready(function () {
-	    $("#flyoutmenu").wijmenu();
-	    $("#menu").wijmenu();
-	    $("#grp-dropdown").wijdropdown();
-	    $("#itm-dropdown").wijdropdown();
-	    $(":input[type='radio']").wijradio();
-	    $(":input[type='text']").wijtextbox();
-	    $(":input[type='checkbox']").wijcheckbox();
-	});
-    </script>
+    <!-- bootstrap3 (bs3) -To ensure proper rendering and touch zooming, add the viewport meta tag to your head. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!--  site styling -->
+    <link rel="stylesheet" href="<?php echo base_url();?>style/styles.css" type="text/css" />
+    <!-- IE6-10 -->
+    <link rel="shortcut icon" href="<?php echo base_url();?>favicon.ico">
+    <!-- Everybody else -->
+    <link rel="icon" href="<?php echo base_url();?>favicon.ico">
+
+    <!--  the following line uses normalize v2 instead of a reset.css -->
+    <link rel="stylesheet" href="<?php echo base_url();?>style/normalize.css" type="text/css" />
+    
+	<!-- Bootstrap core CSS -->
+    <link href="<?php echo base_url();?>bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="<?php echo base_url();?>bootstrap/js/html5shiv.js"></script>
+      <script src="<?php echo base_url();?>bootstrap/js/respond.min.js"></script>
+    <![endif]-->
+	
 </head> 
 <body>
    <!--[if !IE]><body class="body"><![endif]-->
@@ -23,29 +36,9 @@
    <!--[if IE]>
    <p>Only IE shows this paragraph.</p>
    <![endif]-->
-
-  <div class="container">
-     <div class="header">
-        <!--  site logo -->
-	<div id="logo">
-	   <a href="index.php">   
-	       <img src="<?php echo base_url();?>images/prototitle.jpg" width="350" height="75" alt="icon" />
-	   </a>
-	</div>
-	<div id="personal">
-	   <?php echo '<h1>Welcome '.getLoginName().'</h1>'; ?>
-	   <a href="<?php echo base_url();?>index.php?login/editform"><?php echo 'My Settings'; ?></a>&nbsp;&nbsp;&nbsp;&nbsp
-	   <a href="<?php echo base_url();?>index.php?login/signout"><?php echo 'Logout'; ?></a>
-	</div>
-	<? date_default_timezone_set('America/Chicago');
- 	echo date("Y-m-d H:i:s",time()); ?>
-    </div>
-    <div id="wmmenu">
-	     <?php include_once('navigate.php'); ?>
-    </div> <!--wmmenu-->
-  </div> <!--container-->
-  <div id="contentwrapper">  
-  <?php
+   <?php include_once('navigate.php'); ?>
+   <?php include_once('jsandcss.php'); ?>
+<?php
    
    /**
     * verifyAutorization cookie
@@ -66,22 +59,7 @@
    */
     function showHtmlHeader() {
 		header('Content-type: text/html; charset=utf-8'); 
-        echo '<!DOCTYPE html xml:lang="en-us" lang="en-us">'; 
-    }
-   /**
-    * getLoginName
-    * @param   none
-    * @return  logged in name
-   */
-    function getLoginName() {
- 	    $rtn = '';
-        $ci = get_instance();
-	    $ci->load->library('session');
-	    $sarr = $ci->session->all_userdata();
-        if (isset($sarr['fname']) && $sarr['fname'] != "") {
-          $rtn = $sarr['fname'];
-	    }
-	    return $rtn;
+        echo '<!DOCTYPE html xml:lang="en-us" lang="en">';
     }
     //print_r($_SERVER)    
 ?>
