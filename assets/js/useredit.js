@@ -1,9 +1,80 @@
 //<script type="text/javascript">
 $(function() {
-	$( "#modal-dialog").modal('show');
-	$( "#modal-dialog").modal('toggle');
+    $(":input[type='radio']").wijradio();
+    $(":input[type='text']").wijtextbox();
+    //$(":input[type='checkbox']").wijcheckbox();
+    $( "#dlg:ui-dialog" ).wijdialog( "destroy" );
+    $( "#dlg-edituser" ).hide();
+    $( "#dlg-forgot" ).hide();
+    $( "#dlg-login" ).wijdialog({position: [400, 300],
+        autoOpen: true,
+        captionButtons: {
+            pin: {visible: false },
+            refresh: {visible: true },
+            toggle: {visible: false },
+            minimize: {visible: false },
+            maximize: {visible: false },
+            close: {visible: true }
+        },       
+        modal: true,
+        title: 'Login Screen',
+        resizable: false,
+        height: 325,
+        width: 400,
+        zIndex: 0,
+        open: function() { $('.user-area').css('box-shadow','inset -5px -5px 5px #888');
+                            clearTextBox('uname');
+                            clearTextBox('email');
+                         },
+        buttons: {
+            "Login": function() {
+                if(loginUser()){
+					//alert('window.location call');
+                    window.location = 'http://mangumreunion.com/listmgr/cdig/';
+					$( this ).wijdialog( "close" );
+                } else {
+                   updateTips('Invalid login');
+                   clearTextBox('uname');
+                   clearTextBox('email');
+                }
+            },
+            "Register": function() {
+                showUserDialog();
+                $( this ).wijdialog( "close" );
+            },
+            Cancel: function() {
+                $( this ).wijdialog( "close" );
+            }
+        }
+    });
+    $( "#dlg-edituser" ).wijdialog({
+        autoOpen: true,
+        height: 550,
+        width: 450,
+        modal: true,
+        zIndex: 0,
+        //contentUrl: 'http://www.mangumreunion.com/listmgr/cdig',
+        //expandingAnimation: { effect: "puff", duration: 300, easing: "easeOutExpo" },
+        open: function() { $('.user-area').css('box-shadow','inset -5px -5px 5px #888');
+        },
+        buttons: {
+            "Save": function() {
+                bValid = validateUserData();		    
+                if ( bValid ) {
+                    updUserData('upd');
+                    $( this ).wijdialog( "close" );
+                }
+            },
+            Cancel: function() {
+                $( this ).wijdialog( "close" );
+            }
+        },
+        close: function() {
+            allFlds.val( "" ).removeClass( "ui-state-error" );
+        }
+    });
 });
-	
+
     var fname = $( "#fname" ),
         lname = $( "#lname" ),
         uname = $( "#uname" ),
@@ -12,6 +83,17 @@ $(function() {
         userid = $( "#userid" )
         allFlds = $( [] ).add( fname ).add( lname ).add( uname ).add( email ).add( pword ),
         tips = $( ".validateTips" );
+	function doLogin()
+	{
+		if(loginUser()){
+			//alert('window.location call');
+			window.location = 'http://mangumreunion.com/listmgr/cibs/';
+		} else {
+		   updateTips('Invalid login');
+		   clearTextBox('uname');
+		   clearTextBox('email');
+		}
+    }
 
     function updUserData(mode)
     {
@@ -100,18 +182,7 @@ $(function() {
       });
       return rtn;
 	}
-function doLogin()
-{
-                if(loginUser()){
-					//alert('window.location call');
-                    window.location = 'http://mangumreunion.com/listmgr/cibs/';
-				} else {
-                   updateTips('Invalid login');
-                   clearTextBox('uname');
-                   clearTextBox('email');
-				}
 
-}
     function validateUserData() {
 
         var bValid = false;

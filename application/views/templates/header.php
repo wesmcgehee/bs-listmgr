@@ -1,7 +1,7 @@
 <?php ob_start(); ?>
 <?php showHtmlHeader(); ?>
 <?php verifyAutorization(); ?>
-  
+<?php setTimeZone(); ?>  
 <head>
     <title>My Lists</title>
     <!-- bootstrap3 (bs3) -To ensure proper rendering and touch zooming, add the viewport meta tag to your head. -->
@@ -39,7 +39,15 @@
    <?php include_once('navigate.php'); ?>
    <?php include_once('jsandcss.php'); ?>
 <?php
-   
+   /**
+    * set default time zone
+    * @return  void
+    */
+    function setTimeZone($which = 'America/Chicago')
+	{
+	  if (function_exists( 'date_default_timezone_set' ))
+	    date_default_timezone_set($which);
+	}
    /**
     * verifyAutorization cookie
     * @param   none
@@ -51,7 +59,6 @@
 			header("Location: index.php?login");
         }
     }
-
    /**
     * showHtmlHeader
     * @param   none

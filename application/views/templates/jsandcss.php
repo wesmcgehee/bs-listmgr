@@ -1,7 +1,11 @@
     <!--  the following line uses normalize v2 instead of a reset.css -->
     <link rel="stylesheet" href="<?php echo base_url();?>style/normalize.css" type="text/css" />
+    <!--  site styling -->
+    <link rel="stylesheet" href="<?php echo base_url();?>style/styles.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo base_url();?>style/wm-bootstrap.css" type="text/css" />
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url();?>bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="http://cdn.wijmo.com/themes/rocket/jquery-wijmo.css" type="text/css" /> -->
     <!-- jQuery Style sheets -->
     <link rel="stylesheet" href="<?php echo base_url();?>style/themes/wesley/jquery-ui-1.8.22.custom.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo base_url();?>style/themes/wesley/jquery.ui.accordion.css" type="text/css" />
@@ -19,9 +23,6 @@
     <link rel="stylesheet" href="<?php echo base_url();?>style/themes/wesley/jquery.ui.tabs.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo base_url();?>style/themes/wesley/jquery.ui.theme.css" type="text/css" />
 
-    <!-- wijmo Style sheets
-       <link href="<?php echo base_url();?>style/themes/wijmo/jquery-wijmo.css" rel="stylesheet" type="text/css" />
-    -->
     <link href="<?php echo base_url();?>style/themes/wijmo/jquery.wijmo.wijsuperpanel.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo base_url();?>style/themes/wijmo/jquery.wijmo.wijmenu.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo base_url();?>style/themes/wijmo/jquery.wijmo.wijdropdown.css" rel="stylesheet" type="text/css" />
@@ -103,8 +104,6 @@
     <script src="<?php echo base_url();?>assets/aw-pix/jquery.aw-showcase.js" type="text/javascript"></script>
 <!-- END-AW.SHOWCASE -->
     <link rel="stylesheet" href="<?php echo base_url();?>style/aw-pix.css" type="text/css" />
-<!--  site styling -->
-    <link rel="stylesheet" href="<?php echo base_url();?>style/styles.css" type="text/css" />
 <!-- IE6-10 -->
     <link rel="shortcut icon" href="<?php echo base_url();?>favicon.ico">
 <!-- Everybody else -->

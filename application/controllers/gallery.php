@@ -443,24 +443,23 @@
             echo '<input type="hidden" id="imghite" value="'.$height.'"/>';
             
             echo '</td></tr><tr><td colspan="3">';
+            echo '</td></tr></table>';
             $btnattr = array( 'name' => 'delete',
                               'id' => 'frmdel',
-                              'class' => 'frmdel',
+                              'class' => 'btn btn-primary',
                               'content' => 'Delete');
             echo form_button($btnattr);        
             
             $btnattr = array( 'name' => 'update',
                               'id' => 'frmupd',
-                              'class' => 'frmupd',
+                              'class' => 'btn btn-primary',
                               'content' => 'Update');
             echo form_button($btnattr);        
-            
             $btnattr = array( 'name' => 'frmout',
                               'id' => 'frmout',
-                              'class' => 'frmout',
+                              'class' => 'btn btn-primary',
                               'content' => 'Cancel');
             echo form_button($btnattr);
-            echo '</td></tr></table>';
             $formattr = "</div></div>";
             echo form_fieldset_close($formattr);
             if(TEST_MODE)

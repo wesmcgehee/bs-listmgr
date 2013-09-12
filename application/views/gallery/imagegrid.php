@@ -5,9 +5,9 @@
 
   <div id="leftbtncol" class="column">
      <div class="innertube">
-        <button id="frmgupd">Groups</button>
-        <button id="frmifnd">Search</button>
-        <button id="refresh">Refresh</button>
+        <button id="frmgupd" class="btn btn-primary"><span class="glyphicon glyphicon-cog"></span> Groups</button>
+        <button id="frmifnd" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
+        <button id="refresh" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
      </div>
      <div class="innertube">
         <div id="gridview">

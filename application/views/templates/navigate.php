@@ -1,5 +1,5 @@
   <!-- Fixed navbar -->
-  <div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="navbar navbar-custom navbar-static-top" role="navigation">
     <div class="container">   
       <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -7,14 +7,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Prototype List Manager</a>
+          <a class="navbar-brand" href="<?php echo base_url();?>index.php">Prototype List Manager</a>
       </div>
       <!-- Begin menu markup -->
       <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="<?php echo base_url();?>index.php?lists">Groceries</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Images <b class="caret"></b></a>
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Images <b class="caret"></b></a>
                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
                   <li><a href="<?php echo base_url();?>index.php?upload">Upload Files</a></li>
                   <li><a href="<?php echo base_url();?>index.php?gallery">View Gallery</a></li>
@@ -47,19 +47,11 @@
                    <div class="form-group">
                       <div class="personal"><h5>Logged in as <?php echo $uname; ?>&nbsp;&nbsp;&nbsp;&nbsp;</h5></div>
                    </div>
-                    <button type="submit" class="btn btn-success">Sign out</button>
+                    <button type="submit" class="btn btn-default" onclick="javascript: doLogout();">Sign out</button>
                 </form>
-        <?php } else { ?>
-              <form class="navbar-form navbar-right">
-                   <div class="form-group">
-                      <input type="text" placeholder="Email" class="form-control">
-                    </div>
-                    <div class="form-group">
-                      <input type="password" placeholder="Password" class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-success">Sign in</button>
-              </form>
-        <?php  } ?>
+        <?php } else {
+           header("Location: index.php?login");
+         } ?>
       </div><!--/.navbar-collapse -->
     </div> <!-- container -->
    </div> <!-- navbar navbar-inverse navbar-fixed-top -->
@@ -70,7 +62,6 @@
       $.ajax({
        type: 'POST',
 		url: 'index.php?login/signout',
-		data: params,
 		cache: false,
 		async: false,
         dataType: 'json',

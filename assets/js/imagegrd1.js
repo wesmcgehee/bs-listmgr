@@ -56,6 +56,7 @@ $(document).ready(function () {
             window.location.reload(true);		
 		  
   })
+  $(".dialog-img").wijdialog("option", "dialogClass", "btn btn-primary");	 
   $('#dialog-imag').wijdialog({
             autoOpen: false,
             height: 725,
@@ -70,7 +71,7 @@ $(document).ready(function () {
                     $('#imagview').append(formatImageDlg(ifile, lfile));
                   }
              },
-            buttons: {
+            buttons : {
               'Save' : function() {
                  if(modifyImage())
                    console.log('modifyImage=true');
@@ -79,7 +80,7 @@ $(document).ready(function () {
               'Close': function() {
                  $( this ).wijdialog( 'close' );
               }
-           }
+           } 
   });     
 })
   function enableImageCrop()
