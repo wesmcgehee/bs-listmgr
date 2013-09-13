@@ -1,6 +1,4 @@
 <?php
-  define("TEST_MODE",true);
-  
   class Gallery extends CI_Controller {
     
     const MAX_PDESC = 40; // grid pic description view length 

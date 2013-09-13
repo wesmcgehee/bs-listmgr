@@ -1,6 +1,5 @@
 <?php
   define("GROCERY_TYPE",1);
-  define("TEST_MODE",false);
   
 class Lists extends CI_Controller {
 
@@ -43,7 +42,7 @@ class Lists extends CI_Controller {
            foreach($typitems as $typ){
              $typs[$typ->typeid] = $typ->tdescr;
            }
-           $js = 'id="frm-dropdown" class="wijmo-wijdropdown"';
+           $js = 'id="frm-dropdown" class="dropdown"';
            echo form_label('List Types','frm-dropdown');
            echo '<br />';
            echo form_dropdown('frm-dropdown',$typs,'',$js);
@@ -87,7 +86,7 @@ class Lists extends CI_Controller {
         foreach($grpitems as $itm){
           $itms[$itm->itemid] = $itm->item;
         }
-        $js = 'id="itm-dropdown" class="wijmo-wijdropdown" style="width: 70%; margin: 5px 5px 5px 5px;"';
+        $js = 'id="itm-dropdown" class="dropdown" style="width: 70%; margin: 5px 5px 5px 5px;"';
         echo form_label('Items','itm-dropdown');
         echo '<br />';
         echo form_dropdown('itm-dropdown',$itms,'',$js);
@@ -106,7 +105,7 @@ class Lists extends CI_Controller {
     	  $grps[$grp->grpid] = $grp->type;
     	}
         print_r($gid.' grps='.$grps);
-    	$js = 'id="mov-dropdown" class="wijmo-wijdropdown"';
+    	$js = 'id="mov-dropdown" class="dropdown"';
     	echo form_label('Assigned Group','mov-dropdown');
     	echo '<br />';
     	echo form_dropdown('mov-dropdown',$grps,$gid,$js);
@@ -282,7 +281,7 @@ class Lists extends CI_Controller {
         $frmtitle = $incitem ? 'Item Information' : 'Group Information';        
         echo form_fieldset('<b><style="text-align:center;">'.$frmtitle.'</style></b>');
         
-        $js = 'id="frm-dropdown" class="wijmo-wijdropdown"';
+        $js = 'id="frm-dropdown" class="dropdown"';
         
         $ddltitle = $incitem ? 'Assigned Group' : 'Selections';        
         echo form_label($ddltitle,'frm-dropdown');

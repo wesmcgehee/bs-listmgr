@@ -21,16 +21,18 @@
             $agent = 'Unidentified User Agent';
         }
         
-        echo 'agent: '.$agent;
+        echo '<h6> agent: '.$agent;
         
-        echo '  platform: '.$ci->agent->platform(); // Platform info (Windows, Linux, Mac, etc.)
+        echo '  platform: '.$ci->agent->platform().' </h6>'; // Platform info (Windows, Linux, Mac, etc.)
     }
 ?>
 <div class="jumbotron">
   <div class="container">
-    <p>This is a "static" HOME page. You may change the content of this page
-    by updating the file <tt><?php echo __FILE__; ?></tt>.</p>
-    <p></p>
-    <?php getUserAgent(); ?>
+    <?php if(TEST_MODE) { ?>
+       <hr />
+       <h6>This is a "static" HOME page. You may change the content of this page
+          by updating the file <tt><?php echo __FILE__; ?></tt>.</h6>
+       </p>
+    <?php getUserAgent(); } ?>
   </div>  
 </div>

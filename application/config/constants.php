@@ -48,8 +48,8 @@ define("ITEM_STR",'item');
 define("IMG_UPLOAD_PATH",'upload/');
 define("IMG_SUBDIR_PATH", 'user-pix/');
 define("IMG_USER_PATH", IMG_UPLOAD_PATH.IMG_SUBDIR_PATH);
-
 define("TEST_USERID",1);
+define("TEST_MODE",true);
 
 // Define Ajax Request
 define('IS_AJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');

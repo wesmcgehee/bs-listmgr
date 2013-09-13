@@ -61,6 +61,7 @@ label{
     display: block;
     color: #0000A0;   /* dark blue */
 }
+/*
 input[type=text], input[type=password], textarea {
     font: 16px/25px Calibri, Arial, sans-serif;
     display: block;
@@ -69,14 +70,7 @@ input[type=text], input[type=password], textarea {
     -moz-border-radius: 1px;
     -webkit-border-radius: 1px;
  }
-input[type=text], input[type=password], textarea {
-    font: 16px/25px Calibri, Arial, sans-serif;
-    display: block;
-    width: 90%;
-    padding: .4em;
-    -moz-border-radius: 1px;
-    -webkit-border-radius: 1px;
- }
+*/
 input[type=radio], input[type=checkbox] {
     font: 16px/25px Calibri, Arial, sans-serif;
     display: inline;
@@ -239,7 +233,8 @@ fieldset { padding:0;
 #about, #home {
    margin: 5% 0 86% 10%;
    text-align: left;
-   width: 750px;
+   max-width: 1000px;
+   max-height: 750px;
    background-color: transparent;
 }
 #gridview {

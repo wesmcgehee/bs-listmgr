@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
-<title>say what?</title>
+<title>prototype bs-listmgr</title>
 <?php include_once('application/views/templates/jsandcss.php'); ?>
 <script src="<?php echo base_url();?>assets/js/useredit.js" type="text/javascript"></script>
 <body>
@@ -16,19 +16,16 @@
         <div class="modal-header">
             <h2 class="form-signin-heading">Please sign in</h2>
             <form class="form-signin">
-              <fieldset>
-                <p class="validateTips"></p>
                 <input type="text" name="uname" id="uname" class="form-control" placeholder="Username" autofocus>
                 <br />
                 <input type="text" name="email" id="email" class="form-control" placeholder="Email address">
-                <label class="checkbox">
-                      <input type="checkbox" value="remember-me"> Remember me
-                 </label>
-              </fieldset>
+                <div class="checkbox pull-left">
+                  <label style="display: inline;"> <input type="checkbox" value=""> Remember me </label>
+                </div>
             </form>
           </div>
           <div class="modal-footer">
-             <button class="btn btn-lg btn-primary btn-block" onclick="javascript: doLogin();">Sign in</button>            
+             <button class="btn btn-lg btn-primary" onclick="javascript: doLogin();">Sign in</button>            
           </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
