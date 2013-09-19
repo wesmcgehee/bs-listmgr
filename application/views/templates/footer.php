@@ -1,6 +1,6 @@
     <div id="footer">
       <div class="container">
-         &copy; 2012 DukeOfAustin
+         &copy; 2013 DukeOfAustin
       </div>
       <?php if(TEST_MODE)
                date_default_timezone_set('America/Chicago');

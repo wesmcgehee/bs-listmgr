@@ -1,7 +1,9 @@
     <!--  the following line uses normalize v2 instead of a reset.css -->
     <link rel="stylesheet" href="<?php echo base_url();?>style/normalize.css" type="text/css" />
-    <!--  site styling -->
+    <!--  site styling 
     <link rel="stylesheet" href="<?php echo base_url();?>style/styles.css" type="text/css" />
+    -->
+
     <link rel="stylesheet" href="<?php echo base_url();?>style/wm-bootstrap.css" type="text/css" />
     <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url();?>bootstrap/css/bootstrap.css" rel="stylesheet">

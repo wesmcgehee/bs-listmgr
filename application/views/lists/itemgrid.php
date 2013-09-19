@@ -3,9 +3,9 @@
 <script src="<?php echo base_url();?>assets/js/itemfind.js" type="text/javascript"></script>
    <div id="leftbtncol" class="column">
      <div class="innertube">
-        <button id="frmgupd">Group</button>
-        <button id="frmifnd">Search</button>
-        <button id="refresh">Refresh</button>
+        <button id="frmgupd" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Group</button>
+        <button id="frmifnd" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Search</button>
+        <button id="refresh" type="button"  class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Refresh</button>
      </div>
      <div class="innertube">
         <div id="gridview">

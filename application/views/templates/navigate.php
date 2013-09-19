@@ -1,5 +1,5 @@
   <!-- Fixed navbar -->
-  <div class="navbar navbar-custom navbar-static-top" role="navigation">
+  <div class="navbar navbar-inverse navbar-custom navbar-static-top" role="navigation">
     <div class="container">   
       <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -7,14 +7,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="<?php echo base_url();?>index.php">Prototype List Manager</a>
+          <a class="navbar-brand"  href="<?php echo base_url();?>">Prototype List Manager</a>
       </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">      
       <!-- Begin menu markup -->
       <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="<?php echo base_url();?>index.php?lists">Groceries</a></li>
             <li class="dropdown">
-               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Images <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Images <b class="caret"></b></a>
                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
                   <li><a href="<?php echo base_url();?>index.php?upload">Upload Files</a></li>
                   <li><a href="<?php echo base_url();?>index.php?gallery">View Gallery</a></li>
@@ -35,7 +37,7 @@
               <ul class="dropdown-menu">
                  <li><a href="<?php echo base_url();?>index.php?session">Dev-Session</a></li>
                  <li><a href="<?php echo base_url();?>index.php?login">Login Form</a></li>
-                 <li><a href="<?php echo base_url();?>index.php?login/editform">User Settings</a></li>
+                 <li><a href="<?php echo base_url();?>index.php?login/userform">User Settings</a></li>
                  <li><a href="<?php echo base_url();?>index.php?login/signout">Logout</a></li>
                  <li><a href="<?php echo base_url();?>index.php?about">About</a></li>
                </ul>
@@ -45,9 +47,9 @@
            if($uname != '') { ?>
                 <form class="navbar-form navbar-right">
                    <div class="form-group">
-                      <div class="personal"><h5>Logged in as <?php echo $uname; ?>&nbsp;&nbsp;&nbsp;&nbsp;</h5></div>
+                      <div class="navbar-text pull-right"><h5 class="text-cyan">Logged in as <?php echo $uname; ?>&nbsp;&nbsp;&nbsp;&nbsp;</h5></div>
                    </div>
-                    <button type="submit" class="btn btn-default" onclick="javascript: doLogout();">Sign out</button>
+                    <button type="submit" class="btn btn-success" onclick="javascript: doLogout();">Sign out</button>
                 </form>
         <?php } else {
            header("Location: index.php?login");
@@ -55,6 +57,7 @@
       </div><!--/.navbar-collapse -->
     </div> <!-- container -->
    </div> <!-- navbar navbar-inverse navbar-fixed-top -->
+</div><!-- navbar-top -->   
  <div class="container"> <!-- top content div closed in footer -->
 <script type="text/javascript">
   function doLogout()

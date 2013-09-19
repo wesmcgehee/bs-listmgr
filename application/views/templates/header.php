@@ -3,13 +3,13 @@
 <?php verifyAutorization(); ?>
 <?php setTimeZone(); ?>  
 <head>
-    <title>My Lists</title>
+    <title>prototype bs-listmgr</title>
     <!-- bootstrap3 (bs3) -To ensure proper rendering and touch zooming, add the viewport meta tag to your head. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="dukeofaustin-prototype bs-listmgr">
+    <meta name="author" content="dukeofaustin">
 
     <!--  site styling -->
     <link rel="stylesheet" href="<?php echo base_url();?>style/styles.css" type="text/css" />

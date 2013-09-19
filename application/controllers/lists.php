@@ -13,6 +13,7 @@ class Lists extends CI_Controller {
   
     public function index()
     {
+	    $data['title'] = 'Edit Items';
         $query = $this->lists_model->get_groups();
         foreach($query as $grp){
           $grps[$grp->grpid] = $grp->type;

@@ -1,7 +1,20 @@
 <script type="text/javascript">
   $(function() {
+	/*
+     var modalWidth = $('#pop-edit').width();
+     $('#pop-edit').css("left", "50%");
+     $('#pop-edit').css("width", modalWidth);
+     $('#pop-edit').css("margin", (modalWidth/2)*-1);
+    -- or --
+	$('.modal').each(function(){
+	  var modalWidth = $(this).width(),
+		  modalMargin = '-' + (modalWidth/2) + 'px!important';
+	  $(this).css('margin-left',modalMargin);
+	});	
+    */
+    $(':input[type="checkbox"]').wijcheckbox();
     $('#accordion').accordion({
-			animated: 'easeOutElastic',
+			animated: 'easeOutBack',
 			active: false,          //close at all panels startup
 			autoHeight: false,
 			navigation: false,
@@ -16,19 +29,21 @@
  			      $('#accordion').accordion('resize');
 			   }
     });
-   $('#accordian').hide();    $('#dialog:ui-dialog' ).wijdialog('destroy');
-   $('#prntlist').prop('disabled',true);
-   //Append a click event listener to button
-   $('#showlist').bind('click', function() {
-	     $('#prntlist').button('enable');
-    });   
-   $('#grp-descr').hide();
-   $('#itm-descr').hide();
-   $('#itm-dropdesc').hide();
-   $('#itm-descarea').hide();
-   $('#mov-dropdown').hide();
-   $('#custom-area').hide();
-   $('#mov-dropdown').change(function() {
+    $('#accordian').hide();
+    $('#prntlist').prop('disabled',true);
+    //Append a click event listener to button
+    $('#showlist').bind('click', function() {
+       $('#prntlist').button('enable');
+    });
+	/*
+    $('#grp-descr').hide();
+    $('#itm-descr').hide();
+    $('#itm-dropdesc').hide();
+    $('#itm-descarea').hide();
+    $('#mov-dropdown').hide();
+    $('#custom-area').hide();
+    */
+    $('#mov-dropdown').change(function() {
         $('#mov-descr').show();
         var selData = rtnSelectedIdStr('mov');
         if(selData['sid'] > 0)
@@ -70,7 +85,7 @@
 		function(data){
 		 $('#itm-droparea').show();
 		 $('#itm-droparea').html(data);
-         $('#itm-dropdown').wijdropdown();
+         //$('#itm-dropdown').wijdropdown();
      },
      error: function(response) {
 		  console.log('Ajax-error: '+response.status + ' ' + response.statusText);
@@ -81,6 +96,7 @@
 	 $('#itm-droparea').hide();
       }
    });
+   /*
    $('#dialog-form').wijdialog({
             autoOpen: false,
             height: 525,
@@ -123,31 +139,15 @@
                //$(this).wijdialog('destroy');
             }
    });
-  $('#printdata')
-         .button({
-            icons: {
-                primary: 'ui-icon-print'
-            },
-         })
-         .click(function() {
+    */
+     $('#printdata').click(function() {
 	    callPrint('showhere');
 	 });
-  $('#editlist')
-         .button({
-            icons: {
-                primary: 'ui-icon-wrench'
-            },
-         })
-         .click(function() {
-                $('#dialog-form').wijdialog('open');
-	 });
-  $('#showlist')
-	 .button({
-            icons: {
-                primary: 'ui-icon-gear'
-            },
-         })
-	 .click(function() { var ar = getUserChkdItems();
+     $('#editlist').click(function() {
+        $('#modal-dialog').modal('show');   
+     })
+    $('#showlist').click(function() {
+	    var ar = getUserChkdItems();
 		if(ar.length >= 0){
 		  listArrayToConsole(ar);
 		}
@@ -184,13 +184,8 @@
 		});                   
 		  
 	 });
- $('#prntlist')
-	 .button({
-            icons: {
-                primary: 'ui-icon-print'
-            },
-         })
-	 .click(function() { var ar = getUserItemDescr();
+    $('#prntlist').click(function() {
+	    var ar = getUserItemDescr();
 		if(ar.length >= 0){
 		  var paramdata = {
 		     'qtys': ar
@@ -225,18 +220,11 @@
 		  });
 		}
 	 });
- $('#refresh')
-	 .button({
-            icons: {
-	        text: false,
-                primary: 'ui-icon-arrowrefresh-1-w'
-            },
-         })
-	 .click(function() {
+    $('#refresh').click(function() {
             window.location.reload(true);		
 		  
 	 });
-  $('#custom-area').wijdialog({
+     $('#custom-area').wijdialog({
        autoOpen: false,
        captionButtons: {
 	    pin: {visible: false },
@@ -291,8 +279,31 @@
   {
       clearTextBox('grp-descr');
       clearTextBox('itm-descr');
-      clearDropDown('grp-dropdown');
+      //clearDropDown('grp-dropdown');
       clearDropDown('itm-dropdown');
+  }
+  function doUpdateRecord(mode)
+  {
+	  switch(mode)
+	  {
+	     case 'upd':
+			$( '#ajaxLoadAni' ).fadeIn( 'fast' );
+			var bValid = updSelectedItem(mode);
+			$( '#ajaxLoadAni' ).fadeOut( 'slow' );
+			if ( bValid ) {
+			  window.location.reload();
+			}
+			break;
+		 case 'del':
+			$( '#ajaxLoadAni' ).fadeIn( 'fast' );
+			var bValid = updItemRecord(mode);
+			$( '#ajaxLoadAni' ).fadeOut( 'slow' );
+			if ( bValid ) {
+			  window.location.reload();
+			}
+		    break;
+	  }
+ 	  
   }
   function customAlert(output_msg, title_msg)
   {
@@ -302,63 +313,12 @@
         output_msg = 'No Message to Display.';
     	
   }
-  function showGroupDialog()
+  function closeAndReset()
   {
-      var rtn = false;
-      var param = { grpid: 0,
-                    itmid: 0 };      
-      var iid = 0;
-      var gid = 0;
-      var itm = rtnTextboxIdStr('itm');
-      if(itm['sid'] >= 0)
-      {
-          iid = itm['sid'];
-      }
-      console.log(iid);
-      if(iid == 0) {
-        customAlert('You need to select a valid item to move.','Yo');
-      } else {
-        var grp = rtnSelectedIdStr('grp');
-        if(grp['sid'] > 0)
-        {
-           param['grpid'] = grp['sid'];
-           param['itmid'] = itm['sid'];
-        }
-      }
-      console.log(param);
-      if(param['grpid'] > 0)
-      {
-        $('#custom-area').empty();
-        $.ajax({
-          type: 'POST',
-           url: 'index.php?lists/getgroups',
-          data: param,
-         cache: false,
-         async: false,
-       success:
-        function(data){
-          $('#custom-area').html(data);
-          $('#custom-area').wijdialog('open');	
-          $('#mov-dropdown').wijdropdown();
-          $('#mov-dropdown').show();
-          $rtn = true;
-       },
-       beforeSend: function(){
-          //console.log( 'showGroupDialog-beforeSend' );
-       },
-       complete: function (xhr, status) {
-          if (status === 'error' || !xhr.responseText) {
-            console.log('showGroupDialog-Complete-status=error');
-          } else {
-            var data = xhr.responseText;
-            console.log( 'showGroupDialog-complete-xhr.resonseText='+ data);
-          }
-       },
-       error: function(response) {
-          console.log('moveItemToGroup-error: '+response.status + ' ' + response.statusText);
-       }                                  
-       });
-      }
+      $('#mov-edit').modal('hide');
+      $('#pop-edit').modal('hide');
+	  clearControls();
+	  return false;
   }
   function updItemRecord(mode)
   {
@@ -391,8 +351,9 @@
          async: false,
         success:
              function(data){
-           $('#showhere').html(data); 
-           $('#showhere').show();
+			  $('#showhere').html(data); 
+			  $('#showhere').show();
+              console.log( 'updItemRecord-success: '+ data );
            $rtn = true;
              },
              beforeSend: function(){
@@ -407,6 +368,7 @@
            console.log('updItemRecord-error: '+response.status + ' ' + response.statusText);
          }                                  
       });
+	  closeAndReset();
     }
     return rtn;
   }
@@ -494,7 +456,7 @@
         $('input[type="text"]').each(function(){
             if($(this).attr('name') == which + '-descr'){
                $(this).val(str);
-                 }
+            }
          });
      }
      rtn = { sid: id, str: str };
@@ -557,7 +519,6 @@
    return arr;
   }
 </script>
-
 <script type="text/javascript">
    var gibberish=["This is just some text to read while you do nothing.  ",
 		  "Welcome to Duke's CSS Library", "Dreams come to those that drink the kool aid or take a magic carpet ride"];
@@ -568,10 +529,10 @@
 </script>
    <div id="leftcolumn" class="column">
       <div class="innertube">
-        <button id="refresh" class="refresh">Refresh</button>
-        <button id="editlist" class="editlist">Edit</button>
-        <button id="showlist" class="showlist">List</button>
-        <button id="prntlist" class="prntlist">Print</button>
+        <button id="refresh" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+        <button id="editlist" data-toggle="modal" data-target="#pop-edit" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Edit</button>
+        <button id="showlist" class="btn btn-primary"><span class="glyphicon glyphicon-list-alt"></span> List</button>
+        <button id="prntlist" class="btn btn-primary"><span class="glyphicon glyphicon-print"></span> Print</button>
       </div>
       <div class="innercolumn">
 	    <div id="accordionResizer" style="padding: 1px; height: 90%;" class="ui-widget-content">
@@ -596,7 +557,7 @@
                            }
                         }
 	                    echo '<input id="'.$k.'.'.$row->itemid.'" type="checkbox" '.$checked.' />';
-	                    echo '<label for="'.'g.'.$k.'.c.'.$row->itemid.'">'.$row->item.'</label>';
+	                    echo '<label style="font-weight: normal;" for="'.'g.'.$k.'.c.'.$row->itemid.'">'.$row->item.'</label>';
 	                 }
 	             endforeach; 
                  if($cnt > 0) { 
@@ -610,41 +571,85 @@
    </div>
    <div id="midcolumn" class="column">
       <div class="innertube">
+		  <div id="ajaxLoadAni"></div>
           <div id="edit-table">
              <div id="showhere">
-     	      <div id="custom-area" title="Move Item to Group">
-  	          </div>
-           
+     	         <div id="custom-area" title="Move Item to Group"></div>
              </div>
 	      </div>
-      </div>
-      <div id="dialog-form" title="Edit List Items">
-  	     <p class="validateTips">Select what to update</p>
- 	     <form>
-	       <fieldset>
-	         <label for="grp-dropdown">Available Groups</label>
-	         <select name="grp-dropdown" id="grp-dropdown" style="width: 70%; margin: 5px 5px 5px 5px;"> 
-	           <option value="-1"></option>
-	           <option value="0">--Add New--</option>
-                <?php foreach($groups as $k => $v): ?> 
-                      <?php echo '<option value='.$k.'>'.$v.'</option>'; ?>     
-                <?php endforeach; ?> 
-	         </select>
-	         <br/>
-	         <div id='grp-descr'>
-		     <p />
-  	           <label for="grp-descr">Description </label>
-	           <input type="text" name="grp-descr" id="grp-descr" value="" maxlength="80" size="60" style="width:80%;"/>
-	         </div>
-		     <br/>
-		     <p />
-             <div id='itm-droparea'>
-             </div>
-             <div id='itm-descarea'>
-  	           <label for="itm-descr">Description </label>
-	           <input type="text" name="itm-descr" id="itm-descr" value="" maxlength="80" size="60" style="width:80%" />
-	         </div>
-	       </fieldset>
-	     </form>
-	  </div>
+		  <div class="modal fade" id="pop-edit" tabindex="-1" role="dialog" aria-labelledby="pop-edit-label" aria-hidden="true">
+  		    <div class="modal-dialog">
+			 <div class="modal-content">
+				<div class="modal-header">
+				   <h3 class="form-heading"><?php echo $title;?></h3>
+				</div>		
+				<form class="input-medium frmformat" role="form">
+				   <p class="validateTips">Select what to update</p>
+				   <fieldset>
+					 <div class="form-group">
+					   <label for="grp-dropdown">Available Groups</label>
+ 					   <select name="grp-dropdown" class="form-control" id="grp-dropdown" style="width: 70%; margin: 5px 5px 5px 5px;"> 
+					        <option value="-1"></option>
+					        <option value="0">--Add New--</option>
+					        <?php foreach($groups as $k => $v): ?> 
+							   <?php echo '<option value='.$k.'>'.$v.'</option>'; ?>     
+					        <?php endforeach; ?> 
+					    </select>
+					 </div>
+					 <div class="form-group">
+					   <div id='grp-descr'>
+					     <label for="grp-descr">GroupDescription </label>
+						 <input type="text" class="form-control" name="grp-descr" id="grp-descr" value=""/>
+					   </div>
+					 </div>
+					 <div class="form-group">
+ 					    <div id='itm-droparea'></div>
+					 </div>
+					 <div class="form-group">
+					    <div id='itm-descarea'>
+					       <label for="itm-descr">Item Description </label>
+   						   <input type="text" class="form-control" name="itm-descr" id="itm-descr" value=""/>
+ 					    </div>
+					 </div>
+					</fieldset>
+					<div class="modal-footer">
+					   <button type="button" onclick="javascript: doUpdateRecord('upd'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-ok-sign"></span> Save</button>            
+					   <button type="button" onclick="javascript: doUpdateRecord('del'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-minus-sign"></span> Delete</button>
+					   <button type="button" data-toggle="modal" data-target="#mov-edit" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Move</button>
+					   <button type="button" data-dismiss="modal" class="btn btn-primary"><span class="glyphicon glyphicon-remove-sign"></span> Close</button>
+					</div>
+				</form>
+ 			  </div> <!-- modal-content -->
+		    </div> <!-- modal-dialog -->
+	    </div> <!-- pop-edit -->
+		  <div class="modal fade" id="mov-edit" tabindex="-1" role="dialog" aria-labelledby="mov-edit-label" aria-hidden="true">
+  		    <div class="modal-dialog">
+			 <div class="modal-content">
+				<div class="modal-header">
+				   <h3 class="form-heading">Available Group2</h3>
+				</div>		
+				<form class="input-medium frmformat" role="form">
+				   <p class="validateTips">Select desired group</p>
+				   <fieldset>
+		 		     <div class="form-group">
+					   <label for="mov-dropdown">Move to Group</label>
+ 					   <select name="mov-dropdown" class="form-control" id="mov-dropdown">
+						    <li role="presentation" class="dropdown-header">Select Group</li>
+					        <option value="-1"></option>
+					        <option value="0">--Add New--</option>
+					        <?php foreach($groups as $k => $v): ?> 
+							   <?php echo '<option value='.$k.'>'.$v.'</option>'; ?>     
+					        <?php endforeach; ?> 
+					    </select>
+					 </div>
+				   </fieldset>
+				   <div class="modal-footer">
+					   <button type="button" onclick="javascript: updItemRecord('upd'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Save</button>
+					   <button type="button" data-dismiss="modal" class="btn btn-primary"><span class="glyphicon glyphicon-remove-sign"></span> Close</button>
+				   </div>
+				</form>
+			   </div>
+			</div>
+		  </div>
+      </div> <!-- innertube -->
    </div>      

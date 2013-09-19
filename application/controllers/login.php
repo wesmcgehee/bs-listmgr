@@ -108,7 +108,7 @@ class Login extends CI_Controller {
       }
       echo $message;
     }
-    function editform()
+    function userform()
     {
         //todo: put in User controller/view -- needed for dev test of user_model->update_user
         $uname = '';
@@ -125,7 +125,7 @@ class Login extends CI_Controller {
             $data['title'] = 'Edit User Data';
             //var_dump("data ".$data);
             $this->load->view('templates/header', $data);
-            $this->load->view('login/editform', $data);
+            $this->load->view('login/userform', $data);
             $this->load->view('templates/footer');
         } else {
 			echo 'Username and Email not set';

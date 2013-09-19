@@ -91,8 +91,7 @@ $route['gallery'] = 'gallery';
 $route['login/signout'] = 'login/signout';
 $route['login/signon'] = 'login/signon';
 $route['login/upduser'] = 'login/upduser';
-$route['login/editform'] = 'login/editform';
-//$route['login/(:any)'] = 'login/view/$1';
+$route['login/userform'] = 'login/userform';
 $route['login'] = 'login';
 
 $route['(:any)'] = 'pages/view/$1';

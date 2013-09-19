@@ -14,13 +14,13 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-            <h2 class="form-signin-heading">Please sign in</h2>
+            <h3 class="form-signin-heading">Please sign in</h3>
             <form class="form-signin">
                 <input type="text" name="uname" id="uname" class="form-control" placeholder="Username" autofocus>
                 <br />
                 <input type="text" name="email" id="email" class="form-control" placeholder="Email address">
                 <div class="checkbox pull-left">
-                  <label style="display: inline;"> <input type="checkbox" value=""> Remember me </label>
+                  <label> <input type="checkbox" value=""> Remember me </label>
                 </div>
             </form>
           </div>
