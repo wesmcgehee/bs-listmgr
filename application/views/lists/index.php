@@ -9,7 +9,7 @@
 <script type="text/javascript">
   $(function() {
     $(':input[type="checkbox"]').wijcheckbox();
-    $('#accordion').accordion({
+      $('#accordion').accordion({
 			animated: 'easeOutBack',
 			active: false,          //close at all panels startup
 			autoHeight: false,
@@ -26,6 +26,7 @@
 			   }
     });
     $('#accordian').hide();
+	$('#itm-descarea').hide();
     $('#prntlist').prop('disabled',true);
     //Append a click event listener to button
     $('#showlist').bind('click', function() {
@@ -39,12 +40,6 @@
             paramData = { grpid:  selData['sid'] };
         }
         console.log('mov-dropdown-id('+paramData['grpid']+') grpstr('+selData['str']+')');
-   });
-   $('#itm-droparea').change(function() {
-		$('itm-descarea').toggle();
-        $('#itm-descarea').show();
- 	    $('itm-descr').show();
-        var selData = rtnSelectedIdStr('itm');
    });
    $('#grp-dropdown').change(function () {
       var paramData = new Array();
@@ -159,6 +154,13 @@
 		  
 	 });
 });
+function showItmDescr()
+{
+		$('#itm-descarea').toggle();
+        $('#itm-descarea').show();
+ 	    $('#itm-descr').show();
+        var selData = rtnSelectedIdStr('itm');  // populate textbox
+}
 function callPrint(strid) {
 	var prtContent = document.getElementById(strid);
 	var WinPrint = window.open('', 'PrintWindow', 'left=210,top=110,width=800,height=900,toolbar=yes,scrollbars=yes,resizable=yes');
@@ -299,6 +301,8 @@ function updGroupItem()
 	     else
 	       showAlert(data,"alert-error");
 	   }
+	   clearControls();
+	   $('#pop-edit').hide();
      },
     error: function(response) {
 	   showAlert('updGroupItem-error: '+response.status + ' ' + response.statusText,'error-alert');
@@ -484,22 +488,20 @@ function getUserItemDescr()
 					 </div>
 					 <div class="form-group">
 					   <div id='grp-descr'>
-					     <label for="grp-descr">Group Description </label>
+					     <label for="grp-descr">Group Description</label>
 						 <input type="text" class="form-control" name="grp-descr" id="grp-descr" value=""/>
 					   </div>
 					 </div>
 					 <div class="form-group">
  					    <div id='itm-droparea'></div>
 					 </div>
-					 <div class="form-group">
-					    <div id='itm-descarea' style="visibility: hidden">
-					       <label for="itm-descr">Item Description </label>
-   						   <input type="text" class="form-control" name="itm-descr" id="itm-descr" value="" />
- 					    </div>
+					 <div class="form-group" id="itm-descarea">
+					     <label for="itm-descr">Item Description</label>
+   					  <input type="text" class="form-control" name="itm-descr" id="itm-descr" value="" />
 					 </div>
 					</fieldset>
 					<div class="modal-footer">
-					   <button type="button" onclick="javascript: updGroupItem('upd'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-ok-sign"></span> Save</button>            
+					   <button type="button" data-dismiss="modal" onclick="javascript: updGroupItem('upd'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-ok-sign"></span> Save</button>            
 					   <button type="button" onclick="javascript: updItemRecord('del'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-minus-sign"></span> Delete</button>
 					   <button type="button" data-toggle="modal" data-target="#mov-edit" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Move</button>
 					   <button type="button" data-dismiss="modal" class="btn btn-primary"><span class="glyphicon glyphicon-remove-sign"></span> Close</button>
@@ -512,7 +514,7 @@ function getUserItemDescr()
   		    <div class="modal-dialog">
 			 <div class="modal-content">
 				<div class="modal-header">
-				   <h3 class="form-heading">Available Group2</h3>
+				   <h3 class="form-heading">Available Groups</h3>
 				</div>		
 				<form class="input-medium frmformat" role="form">
 				   <p class="validateTips">Select desired group</p>

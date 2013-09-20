@@ -6,7 +6,8 @@
     <br/>
     <p><?php echo $this->pagination->create_links(); ?></p>
 </div>
-
+<!--
 <script type="text/javascript" charset="utf-8">
   $('tr:odd').css('background', '#b0ffd8');
 </script>
+-->
