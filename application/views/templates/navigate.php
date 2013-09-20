@@ -35,11 +35,12 @@
             </li>
             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Help<b class="caret"></b></a>
               <ul class="dropdown-menu">
-                 <li><a href="<?php echo base_url();?>index.php?session">Dev-Session</a></li>
                  <li><a href="<?php echo base_url();?>index.php?login">Login Form</a></li>
                  <li><a href="<?php echo base_url();?>index.php?login/userform">User Settings</a></li>
                  <li><a href="<?php echo base_url();?>index.php?login/signout">Logout</a></li>
                  <li><a href="<?php echo base_url();?>index.php?about">About</a></li>
+                 <li><a href="<?php echo base_url();?>index.php?testpage">Dev-Test Page</a></li>
+                 <li><a href="<?php echo base_url();?>index.php?session">Dev-Environmet</a></li>
                </ul>
           </li>
         </ul> <!--flyoutmenu-->

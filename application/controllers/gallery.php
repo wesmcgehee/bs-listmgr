@@ -36,7 +36,7 @@
          $this->load->library('table');
          $sproc = new siteprocs();
          
-         $data['listtype'] = 'Pictures';
+         $data['listtype'] = 'Stored Image List';
          $ajaxcall = false;
          /* AJAX check  */
          if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){

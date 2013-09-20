@@ -84,7 +84,7 @@
       }
       $query->free_result(); // Release memory
       if (!$rtn){
-        trigger_error('update_itag - tbl_itags error during '+$mode,500); 
+        trigger_error('update_itag - tbl_itags error during '.$mode,E_USER_WARNING); 
       }
     }  
     return $rtn;

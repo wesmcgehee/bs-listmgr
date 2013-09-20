@@ -1,5 +1,7 @@
 <div class="ui-widget">
-    <?php echo '<h1>'.$listtype.'</h1>' ?>
+    <div id="subtitle">
+      <?php echo '<h1>'.$listtype.'</h1>' ?>
+    </div>    
     <p><?php echo $this->table->generate(); ?></p>
     <br/>
     <p><?php echo $this->pagination->create_links(); ?></p>

@@ -54,6 +54,21 @@
       return true;
     }
   }
+  /**
+    Bootstrap Alerts -
+    Function Name - showalert()
+    Inputs - message,alerttype
+    Example - showalert("Invalid Login","alert-error")
+    Types of alerts -- "alert-error","alert-success","alert-info"
+    Required - You only need to add a alert_area div in your html page wherever you want to display these alerts "<div id="alert_area"></div>"
+    Written On - 14-Jun-2013
+  **/
+  function showAlert(message,alerttype) {
+      $('#alert-area').append('<div id="alertdiv" class="alert ' +  alerttype + '"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
+      setTimeout(function() { // this will automatically close the alert and remove this if the users doesnt close it in 8 secs
+      $("#alertdiv").remove();
+    }, 8000);
+  }
   function rtnSelectedIdStr(which)
   {
       var rtn = { sid: 0,

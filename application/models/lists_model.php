@@ -202,8 +202,7 @@
                $query = $this->db->get('tbl_lstgrp');
                if ($query->num_rows() > 0) { // Update
                   $rtn = 'group item with this description already exists';
-               }
-               else  {
+               } else  {
                   $rtn = $this->db->insert('tbl_lstgrp', $data);
                }
             }
@@ -251,7 +250,7 @@
       }
       $query->free_result(); // Release memory
       if (!$rtn){
-        trigger_error('update_item - tbl_lstitem error during '+$mode,500); 
+        trigger_error('update_item - tbl_lstitem error during '.$mode,E_USER_WARNING); 
       }
     }  
     return $rtn;
@@ -288,7 +287,7 @@
       }
       $query->free_result(); // Release memory
       if (!$rtn){
-        trigger_error('update_group - tbl_lstgroup error during '+$mode,500); 
+        trigger_error('update_group - tbl_lstgroup error during '.$mode,E_USER_WARNING); 
       }
     }  
     return $rtn;

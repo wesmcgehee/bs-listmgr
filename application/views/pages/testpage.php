@@ -40,31 +40,29 @@
     }
 ?>
 <div id="about">
-   <h1>Session-Developer-Page</h1>
+   <h1>Developer Test Page</h1>
    <?php getSessionData(); ?>
    <p />
+   <p>
+
+<!-- Single button -->
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    Edit <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="#">Group</a></li>
+    <li><a href="#">Item</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li class="divider"></li>
+    <li><a href="#">Separated link</a></li>
+  </ul>
+</div>
+</div>
+   </p>
       <?php $path = base_url();
             $file = 'style/jcrop/jquery.Jcrop.css';
          echo displayFileExist($file); ?>
 
-   <p> showImageConvert Path: 
-   <?php showImageConvertPath(); ?>
-   </p>
-   <p> showImageMagick 
-   <?php imageMagikVersion(); ?>
-   </p>
-   <p>
-<div class="dropdown">
-  <!-- Link or button to toggle dropdown -->
-  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-    <li role="presentation" class="divider"></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-  </ul>
-</div>	
-   </p>
-   <p>PhpInfo:</p>
-   <?php echo phpinfo(); ?>
+
 </div>

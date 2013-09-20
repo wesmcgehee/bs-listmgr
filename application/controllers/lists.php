@@ -87,11 +87,13 @@ class Lists extends CI_Controller {
         foreach($grpitems as $itm){
           $itms[$itm->itemid] = $itm->item;
         }
-        $js = 'id="itm-dropdown" class="dropdown" style="width: 70%; margin: 5px 5px 5px 5px;"';
-        echo form_label('Items','itm-dropdown');
+		echo '<div class="form-group">';
+		
+        $js = 'id="itm-dropdown" class="form-control"';
+        echo form_label('Available Items','itm-dropdown');
         echo '<br />';
         echo form_dropdown('itm-dropdown',$itms,'',$js);
-        echo '<br />';
+		echo '</div>';
       } else { 
 	    echo '<option> value="-1">Nothing here...</option>';
       }
@@ -152,7 +154,6 @@ class Lists extends CI_Controller {
             }  
           }
           $userid = TEST_USERID;
-          //print_r($rec);
           if(!$this->lists_model->update_shoppick($userid, $rec)){
             $rtn = 'Error updating user selected list';
           }
@@ -162,30 +163,29 @@ class Lists extends CI_Controller {
     }
     public function updlist()  
     {
-        $rtn = 'Updated';
+        $rtn = 'Successful update';
         $input = $this->input->post('piks');
         if(isset($input) && is_array($input)) {
           $rec = array();
           foreach($input as $str){
             if(strpos($str,'.') !== false && strpos($str,'|') !== false){
-                   $sid = substr($str,strpos($str,'.')+1,strpos($str,'|')-2);
-                   $itm = substr($str,strpos($str,'|')+1);
+                $sid = substr($str,strpos($str,'.')+1,strpos($str,'|')-2);
+                $itm = substr($str,strpos($str,'|')+1);
                 if(strpos(strtolower($itm),strtolower(ADD_NEW_REC)) === false)
                    $rec[$sid] = $itm;
 		        else
 		           $rec[$sid] = '';
 	         }
           }
-          print_r($rec);
           if(!$this->lists_model->update_lists($rec)){
              $rtn = 'Error updating user selected list';
-             echo $rtn;
           }
 	    }
+        echo $rtn;
     } 
     public function upditem()  
     {
-        $rtn = 'pre-update';
+        $rtn = 'Success updating record';
         $mode = $this->input->post('mode');
         //echo 'rtn['.$rtn.'] mode['.$mode.']';
         if(isset($mode)) {
@@ -196,7 +196,9 @@ class Lists extends CI_Controller {
           if(!$this->lists_model->update_item($mode,$grpid,$itemid,$descr)){
             $rtn = 'Error updating user selected list';
           }
-        }
+        } else {
+		  $rtn = 'Error mode not set';
+		}
         echo $rtn;
     }
     public function updgroup()  
@@ -269,14 +271,6 @@ class Lists extends CI_Controller {
         }
         echo '<script src="'.base_url().'assets/js/itemgrd2.js" type="text/javascript"></script>';
         echo '<div class="gridcolumn">';
-        /*
-		 *$formattr = array('id' => 'itmform',
-                          'action' => 'index.php?lists/upditem',
-                          'class' => 'ui-widget-content',
-                          'accept-charset' => 'utf-8');
-                          
-	      echo form_open( 'method=post', $formattr);
-	    */
         echo '<div id="itmform" class="ui-widget-content">';
         
         $frmtitle = $incitem ? 'Item Information' : 'Group Information';        
@@ -325,7 +319,7 @@ class Lists extends CI_Controller {
     {
         $this->load->library('pagination');
         $this->load->library('table');
-        $data['listtype'] = 'Grocery';
+        $data['listtype'] = 'Grocery List';
         $ajaxcall = false;
         /* AJAX check  */
         if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
