@@ -3,6 +3,22 @@ $(function() {
     $(":input[type='checkbox']").wijcheckbox();
     $(":input[type='radio']").wijradio();
     $(":input[type='text']").wijtextbox();
+    /*
+    $('#login-dialog').modal({
+            backdrop: false,
+            keyboard: true,
+            show: true
+        }).css({
+            // make width 90% of screen
+           'width': function () { 
+               return ($(document).width() * .9) + 'px';  
+           },
+            // center model
+           'margin-left': function () { 
+               return -($(this).width() / 2); 
+           }
+    });
+    */
 });
     var fname = $( "#fname" ),
         lname = $( "#lname" ),

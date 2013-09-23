@@ -15,19 +15,20 @@
       <div class="modal-content">
         <div class="modal-header">
             <h3 class="form-signin-heading">Please sign in</h3>
-            <form class="form-signin">
-                <input type="text" name="uname" id="uname" class="form-control" placeholder="Username" autofocus>
-                <br />
-                <input type="text" name="email" id="email" class="form-control" placeholder="Email address">
-                <div class="checkbox pull-left">
-                  <label> <input type="checkbox" value=""> Remember me </label>
-                </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-             <button class="btn btn-lg btn-primary" onclick="javascript: doLogin();">Sign in</button>            
-          </div>
-      </div><!-- /.modal-content -->
+        </div>
+         <form class="form-signin">
+             <input type="text" name="uname" id="uname" class="form-control" placeholder="Username" autofocus>
+             <br />
+             <input type="text" name="email" id="email" class="form-control" placeholder="Email address">
+             <div class="checkbox pull-left">
+               <label> <input type="checkbox" value=""> Remember me </label>
+             </div>
+          
+         </form>
+            <div class="modal-footer">
+               <button class="btn btn-lg btn-primary" onclick="javascript: doLogin();">Sign in</button>            
+             </div>
+       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 <!--  <div class="contentwrapper"> -->
 <!--

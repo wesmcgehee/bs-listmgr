@@ -87,13 +87,22 @@ class Lists extends CI_Controller {
         foreach($grpitems as $itm){
           $itms[$itm->itemid] = $itm->item;
         }
-		echo '<div class="form-group">';
-		
-        $js = 'id="itm-dropdown" class="form-control"';
+		//prepend array with blank key/value of nothing
+		$itms = array("-1" => "")+$itms;
+		//echo '<div class="form-group">';
+        $js = 'id="itm-dropdown" class="form-control" onChange="showItmDescr();"';
         echo form_label('Available Items','itm-dropdown');
-        echo '<br />';
         echo form_dropdown('itm-dropdown',$itms,'',$js);
-		echo '</div>';
+		//echo '</div>';
+		/*
+		echo '<div class="form-group">';
+		echo '   <div id="itm-descarea">';
+        echo '       <label for="itm-descr">Item Description </label>';
+        echo ' 	     <input type="text" class="form-control" name="itm-descr" id="itm-descr" value="" />';
+        echo '   </div>';
+        echo '</div>';
+        */
+		
       } else { 
 	    echo '<option> value="-1">Nothing here...</option>';
       }
@@ -327,7 +336,7 @@ class Lists extends CI_Controller {
         }
         $config['base_url'] = base_url().'index.php?lists/itemgrid';
         $config['total_rows'] =  $this->lists_model->item_count();
-        $config['per_page'] = 18;
+        $config['per_page'] = 12;
     	$config['num_links'] = 10; // number of numeric pages shown 
         $config['uri_segment'] = 3;
     	$config['full_tag_open'] = '<div class="pagination-digg">';
@@ -336,7 +345,7 @@ class Lists extends CI_Controller {
         $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 	    // generate table data
         $query = $this->lists_model->get_allitems($config["per_page"], $page);
-    	$tmplate = array ('table_open'  => '<table id="gridtable" border="1" cellpadding="1" cellspacing="1" class="ui-widget-content">' );
+    	$tmplate = array ('table_open'  => '<table id="gridtable" border="1" cellpadding="1" cellspacing="1" class="table table-striped ui-widget-content">' );
         $this->table->set_template($tmplate);
         $this->table->set_empty('&nbsp;');
     	$tbl_heading = array(

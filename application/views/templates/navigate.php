@@ -1,8 +1,8 @@
   <!-- Fixed navbar -->
   <div class="navbar navbar-inverse navbar-custom navbar-static-top" role="navigation">
-    <div class="container">   
       <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Options</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -56,9 +56,8 @@
            header("Location: index.php?login");
          } ?>
       </div><!--/.navbar-collapse -->
-    </div> <!-- container -->
-   </div> <!-- navbar navbar-inverse navbar-fixed-top -->
-</div><!-- navbar-top -->   
+    </div> <!-- navbar navbar-inverse navbar-fixed-top -->
+ </div><!-- navbar-top -->   
  <div class="container"> <!-- top content div closed in footer -->
 <script type="text/javascript">
   function doLogout()
