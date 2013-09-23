@@ -501,7 +501,11 @@ function getUserItemDescr()
 					</fieldset>
 					<div class="modal-footer">
 					   <button type="button" data-dismiss="modal" onclick="javascript: updGroupItem('upd'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-ok-sign"></span> Save</button>            
+<<<<<<< HEAD
 					   <button type="button" data-dismiss="modal" onclick="javascript: updItemRecord('del'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-minus-sign"></span> Delete</button>
+=======
+					   <button type="button" onclick="javascript: updItemRecord('del'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-minus-sign"></span> Delete</button>
+>>>>>>> 1ec5445be9d9a8d98e51f82936a8dae48ba9ffb4
 					   <button type="button" data-toggle="modal" data-target="#mov-edit" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Move</button>
 					   <button type="button" data-dismiss="modal" class="btn btn-primary"><span class="glyphicon glyphicon-remove-sign"></span> Close</button>
 					</div>
