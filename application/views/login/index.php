@@ -13,22 +13,23 @@
  <!-- Modal -->
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
+          <div class="modal-header">
             <h3 class="form-signin-heading">Please sign in</h3>
-        </div>
-         <form class="form-signin">
+          </div>
+          <form class="frmformat">
+            <fieldset>
              <input type="text" name="uname" id="uname" class="form-control" placeholder="Username" autofocus>
              <br />
              <input type="text" name="email" id="email" class="form-control" placeholder="Email address">
              <div class="checkbox pull-left">
                <label> <input type="checkbox" value=""> Remember me </label>
              </div>
-          
-         </form>
-            <div class="modal-footer">
+            </fieldset>
+          </form>
+          <div class="modal-footer">
                <button class="btn btn-lg btn-primary" onclick="javascript: doLogin();">Sign in</button>            
-             </div>
-       </div><!-- /.modal-content -->
+          </div>
+      </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 <!--  <div class="contentwrapper"> -->
 <!--

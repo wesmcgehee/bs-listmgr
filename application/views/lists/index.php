@@ -1,11 +1,10 @@
-  <!-- To do:
-   * Verify ins/upd/del
-   * Verify no blank grp/itm inserts
-   * Check ClearControls; reset itm-dropdown, etc
-   * Break code into js file
-   * Consolidate with common.js
-   *
-   -->
+<!-- To do:
+* Verify ins/upd/del
+* Verify no blank grp/itm inserts
+* Check ClearControls; reset itm-dropdown, etc
+* Break code into js file
+* Consolidate with common.js
+-->
 <script type="text/javascript">
   $(function() {
     $(':input[type="checkbox"]').wijcheckbox();
@@ -26,7 +25,10 @@
 			   }
     });
     $('#accordian').hide();
-	$('#itm-descarea').hide();
+    $('#itm-descarea').hide();
+    $('#edt-sav-btn').prop('disabled',true);
+    $('#edt-del-btn').prop('disabled',true);
+    $('#edt-mov-btn').prop('disabled',true);
     $('#prntlist').prop('disabled',true);
     //Append a click event listener to button
     $('#showlist').bind('click', function() {
@@ -36,10 +38,15 @@
     $("#pop-edit").on('hidden.bs.modal', function () {
        $(this).data('bs.modal', null);
     });
+    $('#pop-edit').on('show.bs.modal', function() {
+         clearControls();
+    })
     $("#mov-edit").on('hidden.bs.modal', function () {
        $(this).data('bs.modal', null);
     });
-    
+    $('#grp-descr').change( function() {
+        console.log('$(this).data='+$(this).data());
+    });
     $('#mov-dropdown').change(function() {
         $('#mov-descr').show();
         var selData = rtnSelectedIdStr('mov');
@@ -51,6 +58,7 @@
    });
    $('#grp-dropdown').change(function () {
       var paramData = new Array();
+      //toggleButtons($('#grp-dropdown'));
       var selData = { sid: 0,
                       str: ''
       }
@@ -59,10 +67,8 @@
       {
           paramData = { grpid:  selData['sid'] };
       }
-          console.log('paramData-id('+paramData['grpid']+') grpstr('+selData['str']+')');
-          //display ajax loader animation
-          //$( '#ajaxLoadAni' ).fadeIn( 'slow' );
-      if(paramData['grpid'] != '')
+      console.log('paramData-id('+paramData['grpid']+') grpstr('+selData['str']+')');
+      if(paramData['grpid'] != '' && paramData['grpid'] != 'undefined')
       {
 	  $('#itm-dropdown').empty();
 	  $('#itm-dropdesc').show();
@@ -161,12 +167,18 @@
 		  
 	 });
 });
-function showItmDescr()
+function toggleButtons(which)
 {
-		$('#itm-descarea').toggle();
-        $('#itm-descarea').show();
- 	    $('#itm-descr').show();
-        var selData = rtnSelectedIdStr('itm');  // populate textbox
+    var desc = which.value;
+    var mute = (desc.length == 0 || desc.indexOf('--Add') !== -1);
+    $('#edt-sav-btn').prop('disabled',mute);
+    /*
+    console.log('toggleButtons-'+which.name);
+    console.log('this.text='+which.text);
+    console.log('this.value='+which.value);
+    var instr = $('#grp-descr').text();
+    console.log(' instr-'+instr);
+    */
 }
 function callPrint(strid) {
 	var prtContent = document.getElementById(strid);
@@ -186,32 +198,6 @@ function clearControls()
 	clearDropDown('grp-dropdown');
 	clearDropDown('itm-dropdown');
 }
-/*
-
-function doUpdateRecord(mode)
-{
-	switch(mode)
-	{
-	   case 'upd':
-		  $( '#ajaxLoadAni' ).fadeIn( 'fast' );
-		  var bValid = updGroupItem(mode);	
-		  $( '#ajaxLoadAni' ).fadeOut( 'slow' );
-		  if ( bValid ) {
-			//window.location.reload();
-		  }
-		  break;
-	   case 'del':
-		  $( '#ajaxLoadAni' ).fadeIn( 'fast' );
-		  var bValid = updItemRecord(mode);
-		  $( '#ajaxLoadAni' ).fadeOut( 'slow' );
-		  if ( bValid ) {
-			//window.location.reload();
-		  }
-		  break;
-	}
-	
-}
-*/
 function closeAndReset()
 {
 	$('#mov-edit').modal('hide');
@@ -403,6 +389,13 @@ function listArrayToConsole(arr)
 	 }
    }
 }
+function showItmDescr()
+{
+    $('#itm-descarea').toggle();
+    $('#itm-descarea').show();
+    $('#itm-descr').show();
+     var selData = rtnSelectedIdStr('itm');  // populate textbox
+}
 function getUserItemDescr()
 {
   var arr = new Array();
@@ -461,57 +454,50 @@ function getUserItemDescr()
    </div>
    <div id="midcolumn" class="column">
       <div class="innertube">
-		   <div id="alert-area">alert-is-here</div>
-		  <div id="ajaxLoadAni"></div>
-          <div id="edit-table">
-             <div id="showhere"></div>
-	      </div>
-		  <div class="modal fade" id="pop-edit" tabindex="-1" role="dialog" aria-labelledby="pop-edit-label" aria-hidden="true">
-  		    <div class="modal-dialog">
-			 <div class="modal-content">
-				<div class="modal-header">
-				   <h3 class="form-heading"><?php echo $title;?></h3>
-				</div>		
-				<form class="input-medium frmformat" role="form">
-				   <p class="validateTips">Select what to update</p>
-				   <fieldset>
-					 <div class="form-group">
-					   <label for="grp-dropdown">Available Groups</label>
- 					   <select name="grp-dropdown" class="form-control" id="grp-dropdown" style="width: 70%; margin: 5px 5px 5px 5px;"> 
-					        <option value="-1"></option>
-					        <option value="0">--Add New--</option>
-					        <?php foreach($groups as $k => $v): ?> 
-							   <?php echo '<option value='.$k.'>'.$v.'</option>'; ?>     
-					        <?php endforeach; ?> 
-					    </select>
-					 </div>
-					 <div class="form-group">
-					   <div id='grp-descr'>
-					     <label for="grp-descr">Group Description</label>
-						 <input type="text" class="form-control" name="grp-descr" id="grp-descr" value=""/>
-					   </div>
-					 </div>
-					 <div class="form-group">
- 					    <div id='itm-droparea'></div>
-					 </div>
-					 <div class="form-group" id="itm-descarea">
-					     <label for="itm-descr">Item Description</label>
-   					  <input type="text" class="form-control" name="itm-descr" id="itm-descr" value="" />
-					 </div>
-					</fieldset>
-					<div class="modal-footer">
-					   <button type="button" data-dismiss="modal" onclick="javascript: updGroupItem('upd'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-ok-sign"></span> Save</button>            
-<<<<<<< HEAD
-					   <button type="button" data-dismiss="modal" onclick="javascript: updItemRecord('del'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-minus-sign"></span> Delete</button>
-=======
-					   <button type="button" onclick="javascript: updItemRecord('del'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-minus-sign"></span> Delete</button>
->>>>>>> 1ec5445be9d9a8d98e51f82936a8dae48ba9ffb4
-					   <button type="button" data-toggle="modal" data-target="#mov-edit" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Move</button>
-					   <button type="button" data-dismiss="modal" class="btn btn-primary"><span class="glyphicon glyphicon-remove-sign"></span> Close</button>
-					</div>
-				</form>
- 			  </div> <!-- modal-content -->
-		    </div> <!-- modal-dialog -->
+	  <div id="ajaxLoadAni"></div>
+          <div id="showhere"></div>
+	  <div class="modal fade" id="pop-edit" tabindex="-1" role="dialog" aria-labelledby="pop-edit-label" aria-hidden="true">
+	    <div class="modal-dialog">
+  	       <div class="modal-content">
+		  <div class="modal-header">
+		     <h3 class="form-heading"><?php echo $title;?></h3>
+		  </div>		
+		  <form class="input-medium frmformat" role="form">
+		     <p class="validateTips">Select what to update</p>
+		     <fieldset>
+			   <div class="form-group">
+			     <label for="grp-dropdown">Available Groups</label>
+			     <select name="grp-dropdown" class="form-control" id="grp-dropdown" style="width: 70%; margin: 5px 5px 5px 5px;"> 
+				  <option value="-1"></option>
+				  <option value="0">--Add New--</option>
+				  <?php foreach($groups as $k => $v): ?> 
+					     <?php echo '<option value='.$k.'>'.$v.'</option>'; ?>     
+				  <?php endforeach; ?> 
+			      </select>
+			   </div>
+			   <div class="form-group">
+			     <div id='grp-descr'>
+			       <label for="grp-descr">Group Description</label>
+				   <input type="text" class="form-control" name="grp-descr" id="grp-descr" onkeyup="javascript: toggleButtons(this);" value=""/>
+			     </div>
+			   </div>
+			   <div class="form-group">
+			      <div id='itm-droparea'></div>
+			   </div>
+			   <div class="form-group" id="itm-descarea">
+			       <label for="itm-descr">Item Description</label>
+			    <input type="text" class="form-control" name="itm-descr" id="itm-descr" value="" />
+			   </div>
+			  </fieldset>
+			  <div class="modal-footer">
+			     <button type="button" id="edt-sav-btn" data-dismiss="modal" onclick="javascript: updGroupItem('upd'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-ok-sign"></span> Save</button>            
+			     <button type="button" id="edt-del-btn" data-dismiss="modal" onclick="javascript: updItemRecord('del'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-minus-sign"></span> Delete</button>
+			     <button type="button" id="edt-mov-btn" data-toggle="modal" data-target="#mov-edit" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Move</button>
+			     <button type="button" id="edt-bye-btn" data-dismiss="modal" class="btn btn-primary"><span class="glyphicon glyphicon-remove-sign"></span> Close</button>
+			  </div>
+		  </form>
+	    </div> <!-- modal-content -->
+      </div> <!-- modal-dialog -->
 	    </div> <!-- pop-edit -->
 		  <div class="modal fade" id="mov-edit" tabindex="-1" role="dialog" aria-labelledby="mov-edit-label" aria-hidden="true">
   		    <div class="modal-dialog">

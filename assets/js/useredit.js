@@ -3,33 +3,16 @@ $(function() {
     $(":input[type='checkbox']").wijcheckbox();
     $(":input[type='radio']").wijradio();
     $(":input[type='text']").wijtextbox();
-    /*
-    $('#login-dialog').modal({
-            backdrop: false,
-            keyboard: true,
-            show: true
-        }).css({
-            // make width 90% of screen
-           'width': function () { 
-               return ($(document).width() * .9) + 'px';  
-           },
-            // center model
-           'margin-left': function () { 
-               return -($(this).width() / 2); 
-           }
-    });
-    */
-});
-    var fname = $( "#fname" ),
-        lname = $( "#lname" ),
-        uname = $( "#uname" ),
-        email = $( "#email" ),
-        //pword = $( "#pword" ),
-        userid = $( "#userid" )
-        allFlds = $( [] ).add( fname ).add( lname ).add( uname ).add( email ),
-        tips = $( ".validateTips" );
-	function doLogin()
-	{
+ });
+var fname = $( "#fname" ),
+    lname = $( "#lname" ),
+    uname = $( "#uname" ),
+    email = $( "#email" ),
+    userid = $( "#userid" )
+    allFlds = $( [] ).add( fname ).add( lname ).add( uname ).add( email ),
+    tips = $( ".validateTips" );
+    function doLogin()
+    {
 		if(loginUser()){
 			//alert('window.location call');
 			window.location = 'http://mangumreunion.com/listmgr/cibs/';
@@ -40,18 +23,17 @@ $(function() {
 		}
     }
     function doUpdate()
-	{
-        var bValid = validateUserData();		    
-        if ( bValid ) {
-            updUserData('upd');
-			window.location = 'http://mangumreunion.com/listmgr/cibs/';
-		}
-		
-	}
-	function doGoHome()
-	{
-		window.open('index.php','_self');	
-	}
+    {
+       var bValid = validateUserData();		      
+       if ( bValid ) {
+	  pdUserData('upd');
+          window.location = 'http://mangumreunion.com/listmgr/cibs/';
+       }
+    }
+    function doGoHome()
+    {
+       window.open('index.php','_self');	
+    }
     function updUserData(mode)
     {
         if(typeof mode == 'undefined' || mode === ''){
@@ -137,14 +119,11 @@ $(function() {
 	}
 
     function validateUserData() {
-
         var bValid = false;
-
         var fname = $('#fname'),
             lname = $('#lname'),
             uname = $('#uname'),
-            email = $('#email'),
-            //pword = $('#pword');
+            email = $('#email')
         bValid = checkLength( fname, "fname", 3, 25 );
         bValid = bValid && checkLength( lname, "lname", 3, 25 );
         bValid = bValid && checkLength( uname, "uname", 3, 16 );
@@ -164,7 +143,6 @@ $(function() {
     function showUserDialog(){
         $( "#dlg-edituser" ).wijdialog( "open" );
     }
-
     function clearTextBox(which)
     {
        var str = '';
@@ -175,7 +153,6 @@ $(function() {
            }
        });
     }
-
     function setTextBoxVal(which, txt)
     {
        var str = txt.val();
@@ -186,33 +163,3 @@ $(function() {
            }
        });
     }
-    /*
-    function updateTips( t ) {
-        tips.text( t ).addClass( "ui-state-highlight" );
-        setTimeout(function() {
-            tips.removeClass( "ui-state-highlight", 1500 );
-        }, 500 );
-    }
-
-    function checkLength( o, n, min, max ) {
-        if ( o.val().length > max || o.val().length < min ) {
-            o.addClass( "ui-state-error" );
-            updateTips( "Length of " + n + " must be between " +
-                min + " and " + max + "." );
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    function checkRegexp( o, regexp, n ) {
-        if ( !( regexp.test( o.val() ) ) ) {
-            o.addClass( "ui-state-error" );
-            updateTips( n );
-            return false;
-        } else {
-            return true;
-        }
-    }
-    */
-//</script>
