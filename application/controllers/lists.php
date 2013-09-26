@@ -93,17 +93,7 @@ class Lists extends CI_Controller {
         $js = 'id="itm-dropdown" class="form-control" onChange="showItmDescr();"';
         echo form_label('Available Items','itm-dropdown');
         echo form_dropdown('itm-dropdown',$itms,'',$js);
-		//echo '</div>';
-		/*
-		echo '<div class="form-group">';
-		echo '   <div id="itm-descarea">';
-        echo '       <label for="itm-descr">Item Description </label>';
-        echo ' 	     <input type="text" class="form-control" name="itm-descr" id="itm-descr" value="" />';
-        echo '   </div>';
-        echo '</div>';
-        */
-		
-      } else { 
+	  } else { 
 	    echo '<option> value="-1">Nothing here...</option>';
       }
       exit;
@@ -172,24 +162,25 @@ class Lists extends CI_Controller {
     }
     public function updlist()  
     {
-        $rtn = 'Successful update';
-        $input = $this->input->post('piks');
-        if(isset($input) && is_array($input)) {
-          $rec = array();
-          foreach($input as $str){
-            if(strpos($str,'.') !== false && strpos($str,'|') !== false){
-                $sid = substr($str,strpos($str,'.')+1,strpos($str,'|')-2);
-                $itm = substr($str,strpos($str,'|')+1);
-                if(strpos(strtolower($itm),strtolower(ADD_NEW_REC)) === false)
-                   $rec[$sid] = $itm;
-		        else
-		           $rec[$sid] = '';
-	         }
-          }
-          if(!$this->lists_model->update_lists($rec)){
-             $rtn = 'Error updating user selected list';
-          }
-	    }
+        $rtn = 'Success updating record';
+        $mode = $this->input->post('mode');
+        //echo 'rtn['.$rtn.'] mode['.$mode.']';
+        if(isset($mode)) {
+          $grpid = $this->input->post('grpid');
+          $itemid = $this->input->post('itmid');
+		  $gdesc = $this->input->post('gdesc');
+          $idesc = $this->input->post('idesc');
+          $rtn = 'mode '+$mode+' grpid '+$grpid+' gdescr'+$gdesc+' itemid '+$itemid+' idescr'+$idesc;
+		  $updid = $this->lists_model->update_group_rec($mode,$grpid,$gdesc,$typid);
+		  if($updid > 0 && str_len($idesc) > 0 && substr($idesc,0,1) != '--') {
+              if(!$this->lists_model->update_item($mode,$updid,$itemid,$idesc)){
+                $rtn = 'Error updating item record';
+			  }
+          } else {
+            $rtn = 'Error updating group record';
+		
+		  }
+ 	    }
         echo $rtn;
     } 
     public function upditem()  
@@ -206,16 +197,17 @@ class Lists extends CI_Controller {
             $rtn = 'Error updating user selected list';
           }
         } else {
-		  $rtn = 'Error mode not set';
-		}
+	  $rtn = 'Error mode not set';
+	}
         echo $rtn;
     }
     public function updgroup()  
     {
-        $rtn = 'pre-update';
-        $mode = $this->input->post('mode');
+      $rtn = 'pre-update';
+      $mode = $this->input->post('mode');
         //echo 'rtn['.$rtn.'] mode['.$mode.']';
-        if(isset($mode)) {
+      if(isset($mode))
+	  {
           $grpid = $this->input->post('grpid');
           $descr = $this->input->post('descr');
           $typid = GROCERY_TYPE;
@@ -223,39 +215,39 @@ class Lists extends CI_Controller {
           if(!$this->lists_model->update_group($mode,$grpid,$descr,$typid)){
             $rtn = 'Error updating group table';
           }
-        }
-        echo $rtn;
+      }
+      echo $rtn;
     }
-	public function findform()
-	{
-        $this->load->helper('form');
-        echo '<script src="'.base_url().'assets/js/itemfind.js" type="text/javascript"></script>';
-        echo '<div class="gridcolumn">';
-        echo '<div id="fndform" class="ui-widget-content">';
-        $frmtitle = 'Search for Item LIKE';
-        //echo form_fieldset('<b><style="text-align:center;">'.$frmtitle.'</style></b>');
-		echo form_fieldset('<b>');
-		echo "<label for='searchstr'>".$frmtitle."</label>";
-        echo "<input type='text' name='searchstr' id='searchstr' value='' maxlength='80' size='80' style='width:80%;'/>";
-        echo '<br/>';
-		
-		$btnattr = array( 'name' => 'findbtn',
-                          'id' => 'findbtn',
-                          'class' => 'findbtn',
-                          'content' => 'Search');
-        echo form_button($btnattr);        
-        
-        $btnattr = array( 'name' => 'nonebtn',
-                          'id' => 'nonebtn',
-                          'class' => 'nonebtn',
-                          'content' => 'Cancel');
-        echo form_button($btnattr);        
-		echo form_fieldset_close();
-		
-        $formattr = "</div></div>";
-        echo $formattr;
-	  return;
-	}
+    public function findform()
+    {
+      $this->load->helper('form');
+      echo '<script src="'.base_url().'assets/js/itemfind.js" type="text/javascript"></script>';
+      echo '<div class="gridcolumn">';
+      echo '<div id="fndform" class="ui-widget-content">';
+      $frmtitle = 'Search for Item LIKE';
+      //echo form_fieldset('<b><style="text-align:center;">'.$frmtitle.'</style></b>');
+	      echo form_fieldset('<b>');
+	      echo "<label for='searchstr'>".$frmtitle."</label>";
+      echo "<input type='text' name='searchstr' id='searchstr' value='' maxlength='80' size='80' style='width:80%;'/>";
+      echo '<br/>';
+	      
+	      $btnattr = array( 'name' => 'findbtn',
+			'id' => 'findbtn',
+			'class' => 'findbtn',
+			'content' => 'Search');
+      echo form_button($btnattr);        
+      
+      $btnattr = array( 'name' => 'nonebtn',
+			'id' => 'nonebtn',
+			'class' => 'nonebtn',
+			'content' => 'Cancel');
+      echo form_button($btnattr);        
+	      echo form_fieldset_close();
+	      
+      $formattr = "</div></div>";
+      echo $formattr;
+	return;
+    }
     public function getform()
     {
         $this->load->helper('form');
@@ -336,7 +328,7 @@ class Lists extends CI_Controller {
         }
         $config['base_url'] = base_url().'index.php?lists/itemgrid';
         $config['total_rows'] =  $this->lists_model->item_count();
-        $config['per_page'] = 12;
+        $config['per_page'] = 18;
     	$config['num_links'] = 10; // number of numeric pages shown 
         $config['uri_segment'] = 3;
     	$config['full_tag_open'] = '<div class="pagination-digg">';
@@ -345,7 +337,7 @@ class Lists extends CI_Controller {
         $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 	    // generate table data
         $query = $this->lists_model->get_allitems($config["per_page"], $page);
-    	$tmplate = array ('table_open'  => '<table id="gridtable" border="1" cellpadding="1" cellspacing="1" class="table table-striped ui-widget-content">' );
+    	$tmplate = array ('table_open'  => '<table id="gridtable" border="1" cellpadding="1" cellspacing="1" class="ui-widget-content">' );
         $this->table->set_template($tmplate);
         $this->table->set_empty('&nbsp;');
     	$tbl_heading = array(

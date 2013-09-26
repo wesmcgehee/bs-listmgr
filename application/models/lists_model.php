@@ -204,6 +204,9 @@
                   $rtn = 'group item with this description already exists';
                } else  {
                   $rtn = $this->db->insert('tbl_lstgrp', $data);
+                  if($rtn){
+                    $grpid = $this->db->insert_id();    // return last grpid inserted
+                  }
                }
             }
         } else if ($cnt == 1){ // tbl_lstitem
@@ -289,6 +292,39 @@
       if (!$rtn){
         trigger_error('update_group - tbl_lstgroup error during '.$mode,E_USER_WARNING); 
       }
+    }  
+    return $rtn;
+  }
+  /* Function to group table
+   * Default is 2 recs with 1 being a group record and 2 being an item
+   * return: grpid (new if an insert)
+  */
+  public function update_group_rec($mode, $grpid, $descr, $typeid = GROCERY_TYPE)
+  {
+    $rtn = 0;
+    if(isset($descr)){
+      $data = array('typeid' => $typeid, 'descr' => $descr, 'grpid' => $grpid);
+      $this->db->where('grpid', $grpid);
+      $query = $this->db->get('tbl_lstgrp');
+      if ($grpid > 0 && strlen($descr) > 0 && $query->num_rows() > 0) { // Update
+         $this->db->where('grpid', $grpid);
+         if($mode == UPDATE_REC){
+            $rtn = $this->db->update('tbl_lstgrp', $data); 
+         } else if($mode == DELETE_REC) {
+            $tables = array('tbl_lstgrp', 'tbl_lstitem', 'tbl_shopgrps');  // eliminate shopgrps with reference to this group
+            $this->db->where('grpid', $grpid);
+            $rtn = $this->db->delete($tables);
+         }
+         if ($this->db->affected_rows() > 0) {
+           $rtn = $grpid;
+         }         
+      } else {
+         $rtn = $this->db->insert('tbl_lstgrp', $data);
+         if ($this->db->affected_rows() > 0) {
+           $rtn = $this->db->insert_id();    // return last grpid inserted
+         }
+      }
+      $query->free_result(); // Release memory
     }  
     return $rtn;
   }

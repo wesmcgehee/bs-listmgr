@@ -3,13 +3,11 @@
  * Wesley McGehee
  * 20130529
  */
-  function inlineDebug(o)
-  {
+  function inlineDebug(o)  {
     console.log('just keep stepping into the unknown...');
     debugger;
   }
-  function isString(o)
-  {
+  function isString(o) {
     //ref: http://www.webcosmoforums.com/javascript-ajax/25689-how-check-if-string-null-empty-javascript.html
     //if(var) -- This would make javascript make an implicit conversion to boolean for the variable
     if(o && o.val != '' && typeof o != 'undefined') {
@@ -69,8 +67,7 @@
       $("#alertdiv").remove();
     }, 8000);
   }
-  function rtnSelectedIdStr(which)
-  {
+  function rtnSelectedIdStr(which)  {
       var rtn = { sid: 0,
                   str: ''};
       var id = 0;
@@ -92,15 +89,13 @@
                str: str   };
       return rtn;
   }
-  function setDropdownSelection(which,txt)
-  {
+  function setDropdownSelection(which,txt)  {
     
     $('#'+which + ' option:contains('+txt+')').attr('selected', 'selected');
     console.log('setDropdownSelection-val('+$('#'+which).val()+')');
   }
   
-function cleanItemString (paramstr)
-{        
+function cleanItemString (paramstr) {        
     "use strict";
     var rtn;
     rtn = paramstr;
