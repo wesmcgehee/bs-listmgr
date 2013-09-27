@@ -24,7 +24,6 @@ $(function() {
                            }
     });
     $('#accordian').hide();
-
     $('#prntlist').prop('disabled',true);
     //Append a click event listener to button
     $('#showlist').bind('click', function() {
@@ -61,6 +60,9 @@ $(function() {
       var selData = { sid: 0,
                       str: ''}
       selData = rtnSelectedIdStr('grp');
+      //reset original values
+      gxval = selData['str'];
+      ixval = '';
       if(selData['sid'] > 0)
       {
           paramData = { grpid:  selData['sid'] };
@@ -163,21 +165,17 @@ $(function() {
        window.location.reload(true);            
    });
 });
+var gxval = '';  // original grp-descr
+var ixval = '';  // original itm-descr
 function toggleButtons(which)
 {
     var desc = which.value;
     var temp = $('#edt-sav-btn').prop('disabled');
-    console.log('disabled: '+temp);
     var mute = (desc.length == 0 || desc.indexOf('--') !== -1);
     $('#edt-sav-btn').prop('disabled',mute);
-    
-    /*
-    console.log('toggleButtons-'+which.name);
-    console.log('this.text='+which.text);
-    console.log('this.value='+which.value);
-    var instr = $('#grp-descr').text();
-    console.log(' instr-'+instr);
-    */
+    $('#edt-del-btn').prop('disabled',mute);
+    if(which.name.substr(0,3) == 'itm')
+       $('#edt-mov-btn').prop('disabled',mute);
 }
 function callPrint(strid) {
         var prtContent = document.getElementById(strid);
@@ -217,7 +215,9 @@ function updChangedFields()
                 grpid: 0,
 		gdesc: '',
 		itmid: 0,
-		idesc: ''};
+		idesc: '',
+		ixval: ixval,
+		gxval: gxval};
    var tmp = rtnTextboxIdStr('grp'); //get grp dropdown id
    if(typeof tmp != 'undefined' && tmp['sid'] >= 0) {
       param['grpid'] = tmp['sid'];
@@ -247,7 +247,6 @@ function updChangedFields()
          } else {
             msg = data+': Error!';
          }
-         console.log(msg);
          $rtn = true;
        },
       complete: function (xhr, status) {
@@ -259,6 +258,7 @@ function updChangedFields()
                  msg = 'updGroupRecord-error: '+response.status + ' ' + response.statusText;
            }                                  
     });
+    console.log('msg-'+msg);
     closeAndReset();
     showAlert(msg,'alert-info');
    }
@@ -465,7 +465,8 @@ function showItmDescr()
     $('#itm-descarea').toggle();
     $('#itm-descarea').show();
     $('#itm-descr').show();
-     var selData = rtnSelectedIdStr('itm');  // populate textbox
+    var selData = rtnSelectedIdStr('itm');  // populate textbox
+    ixval = selData['str'];
 }
 function getUserItemDescr()
 {

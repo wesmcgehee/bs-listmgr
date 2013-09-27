@@ -309,19 +309,23 @@
       if ($grpid > 0 && strlen($descr) > 0 && $query->num_rows() > 0) { // Update
          $this->db->where('grpid', $grpid);
          if($mode == UPDATE_REC){
-            $rtn = $this->db->update('tbl_lstgrp', $data); 
+            if($this->db->update('tbl_lstgrp', $data))
+               $rtn = $grpid;
          } else if($mode == DELETE_REC) {
             $tables = array('tbl_lstgrp', 'tbl_lstitem', 'tbl_shopgrps');  // eliminate shopgrps with reference to this group
             $this->db->where('grpid', $grpid);
-            $rtn = $this->db->delete($tables);
+            if($this->db->delete($tables))
+              $rtn = $grpid;
          }
          if ($this->db->affected_rows() > 0) {
            $rtn = $grpid;
+           die('upd_group_rec-1-here we are!');
          }         
       } else {
-         $rtn = $this->db->insert('tbl_lstgrp', $data);
+         if($this->db->insert('tbl_lstgrp', $data))
+           $rtn = $this->db-insert_id();  // return last grpid inserted
          if ($this->db->affected_rows() > 0) {
-           $rtn = $this->db->insert_id();    // return last grpid inserted
+           die('upd_group_rec-2-here we are!');  
          }
       }
       $query->free_result(); // Release memory

@@ -162,7 +162,7 @@ class Lists extends CI_Controller {
     }
     public function updlist()  
     {
-        $rtn = 'Success updating record';
+        $rtn = '';
         $mode = $this->input->post('mode');
         //echo 'rtn['.$rtn.'] mode['.$mode.']';
         if(isset($mode)) {
@@ -170,15 +170,30 @@ class Lists extends CI_Controller {
           $itemid = $this->input->post('itmid');
 		  $gdesc = $this->input->post('gdesc');
           $idesc = $this->input->post('idesc');
-          $rtn = 'mode '+$mode+' grpid '+$grpid+' gdescr'+$gdesc+' itemid '+$itemid+' idescr'+$idesc;
-		  $updid = $this->lists_model->update_group_rec($mode,$grpid,$gdesc,$typid);
-		  if($updid > 0 && str_len($idesc) > 0 && substr($idesc,0,1) != '--') {
+		  $gxval = $this->input->post('gxval');
+		  $ixval = $this->input->post('ixval');
+		  /*
+		   $rtn = 'gxval['.$gxval.']==gdesc['.$gdesc.'] ('. ($gxval == $gdesc ? 'true' : 'false').') ';
+		   $rtn .= 'ixval['.$ixval.']==idesc['.$idesc.'] ('. ($ixval == $idesc ? 'true' : 'false').') ';
+		   die($rtn);
+		  */
+		  $gchg = ($gxval != $gdesc) && (strlen(trim($gdesc)) > 0) && (stripos($gdesc,ADD_NEW_REC) === false);
+		  $ichg = ($ixval != $idesc) && (strlen(trim($idesc)) > 0) && (stripos($idesc,ADD_NEW_REC) === false);
+		  if($gchg)
+		  {
+			 $updid = $this->lists_model->update_group_rec($mode,$grpid,$gdesc);
+			 $rtn = 'Updated Group Id('.$updid.')=['.$gdesc.']';
+		  } else {
+		     $updid = $grpid;
+		  }
+		  if($updid > 0 && $ichg) {
               if(!$this->lists_model->update_item($mode,$updid,$itemid,$idesc)){
                 $rtn = 'Error updating item record';
+			  } else {
+				$rtn .= ' Updated Item Id('.$itemid.')=['.$idesc.']';
 			  }
           } else {
-            $rtn = 'Error updating group record';
-		
+            $rtn = 'Error updating group record or no item to update';
 		  }
  	    }
         echo $rtn;
