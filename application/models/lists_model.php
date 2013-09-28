@@ -258,7 +258,7 @@
     }  
     return $rtn;
   }
-  /* Function to update an group record with grpid, descr based on mode and grpid
+  /* Function to update a group record with grpid, descr based on mode and grpid
    */
   public function update_group($mode, $grpid, $descr, $typeid = GROCERY_TYPE)
   {
@@ -323,7 +323,7 @@
          }         
       } else {
          if($this->db->insert('tbl_lstgrp', $data))
-           $rtn = $this->db-insert_id();  // return last grpid inserted
+           $rtn = $this->db->insert_id();  // return last grpid inserted
          if ($this->db->affected_rows() > 0) {
            die('upd_group_rec-2-here we are!');  
          }

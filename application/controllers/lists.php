@@ -179,10 +179,12 @@ class Lists extends CI_Controller {
 		  */
 		  $gchg = ($gxval != $gdesc) && (strlen(trim($gdesc)) > 0) && (stripos($gdesc,ADD_NEW_REC) === false);
 		  $ichg = ($ixval != $idesc) && (strlen(trim($idesc)) > 0) && (stripos($idesc,ADD_NEW_REC) === false);
-		  if($gchg)
+		  $delgrp = $mode === DELETE_REC && !$ichg;
+		  $rtn = 'mode['.$mode.'] ';
+		  if($gchg || $delgrp)
 		  {
 			 $updid = $this->lists_model->update_group_rec($mode,$grpid,$gdesc);
-			 $rtn = 'Updated Group Id('.$updid.')=['.$gdesc.']';
+			 $rtn .= 'Updated Group Id('.$updid.')=['.$gdesc.'] DELGRP='.($delgrp) ? 'True ' : 'False ';
 		  } else {
 		     $updid = $grpid;
 		  }

@@ -72,6 +72,7 @@ $(function() {
       {
           $('#itm-dropdown').empty();
           $('#itm-dropdesc').show();
+	  $('#edt-del-btn').prop('disabled',false);
           clearTextBox('itm-descr');
           $.ajax({
               type: 'POST',
@@ -206,7 +207,7 @@ function closeAndReset()
         resetControls();
         return false;
 }
-function updChangedFields()
+function updChangedFields(mode)
 {
    //does group record need updating:
    var rtn = false;
@@ -218,6 +219,10 @@ function updChangedFields()
 		idesc: '',
 		ixval: ixval,
 		gxval: gxval};
+   if(mode){
+     param['mode'] = mode;
+   }
+		
    var tmp = rtnTextboxIdStr('grp'); //get grp dropdown id
    if(typeof tmp != 'undefined' && tmp['sid'] >= 0) {
       param['grpid'] = tmp['sid'];
@@ -561,8 +566,8 @@ function getUserItemDescr()
                            </div>
                           </fieldset>
                           <div class="modal-footer">
-                             <button type="button" id="edt-sav-btn" data-dismiss="modal" onclick="javascript: updChangedFields(); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-ok-sign"></span> Save</button>            
-                             <button type="button" id="edt-del-btn" data-dismiss="modal" onclick="javascript: updItemRecord('del'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-minus-sign"></span> Delete</button>
+                             <button type="button" id="edt-sav-btn" data-dismiss="modal" onclick="javascript: updChangedFields('upd'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-ok-sign"></span> Save</button>            
+                             <button type="button" id="edt-del-btn" data-dismiss="modal" onclick="javascript: updChangedFields('del'); return false;" class="btn btn-primary"><span class="glyphicon glyphicon-minus-sign"></span> Delete</button>
                              <button type="button" id="edt-mov-btn" data-toggle="modal" data-target="#mov-edit" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Move</button>
                              <button type="button" id="edt-bye-btn" data-dismiss="modal" class="btn btn-primary"><span class="glyphicon glyphicon-remove-sign"></span> Close</button>
                           </div>
