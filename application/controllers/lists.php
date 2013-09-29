@@ -179,7 +179,7 @@ class Lists extends CI_Controller {
 		  */
 		  $gchg = ($gxval != $gdesc) && (strlen(trim($gdesc)) > 0) && (stripos($gdesc,ADD_NEW_REC) === false);
 		  $ichg = ($ixval != $idesc) && (strlen(trim($idesc)) > 0) && (stripos($idesc,ADD_NEW_REC) === false);
-		  $delgrp = $mode === DELETE_REC && !$ichg;
+		  $delgrp = ($mode === DELETE_REC && !$ichg);
 		  $rtn = 'mode['.$mode.'] ';
 		  if($gchg || $delgrp)
 		  {
