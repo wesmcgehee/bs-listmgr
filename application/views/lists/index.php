@@ -349,10 +349,10 @@ function updItemRecord(mode)
        async: false,
       success: function(data){
          if(data.length > 0 && data.indexOf("Error") !== -1) {
-                tmp = 'data: Error not present';
+            tmp = 'data: Error not present';
             showAlert(data,"alert-success");
          } else {
-                tmp = 'data: Error!';
+            tmp = 'data: Error!';
             showAlert(data,"alert-error");
          }
              console.log(tmp);

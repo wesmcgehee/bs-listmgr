@@ -68,26 +68,6 @@
     }
     return $result;
   } // end get_shopgrps
-  
-  public function get_userhist($userid = TEST_USERID) {
-    $result = array();
-    $this->db->select('tbl_shopgrps.grpid as grpid,tbl_shopgrps.descr');
-    $this->db->from('tbl_shopgrps');
-    $this->db->where('userid', $userid);
-    $this->db->order_by('grpid'); 
-    $query = $this->db->get();
-    if ($query->num_rows() > 0) {
-      foreach ($query->result() as $rec) {
-        $descr = $rec->descr;
-        $pos = stripos($descr,'-');
-        if($pos > 0) {
-            $descr = substr($descr,$pos+1);
-        }
-        $result[$rec->grpid] = $descr;
-      }
-    }
-    return $result;
-  } // end get_userhist
 
   public function get_usergrps($idlist='') {
     $result = array();
@@ -105,7 +85,7 @@
           //print_r($result[$rec->itemid]);
         }
       } else {
-        die("nothing found for : ".$idlist);
+        //die("nothing found for : ".$idlist);
       }
     } else {
       die("nothing found for : ".$idlist);
@@ -125,7 +105,7 @@
         //print_r($result[$rec->itemid]);
       }
     } else {
-        die("nothing found for userid : ".$userid);
+       // die("nothing found for userid : ".$userid);
     }
     return $result;
   } // end get_shoplist
@@ -301,7 +281,7 @@
   */
   public function update_group_rec($mode, $grpid, $descr, $typeid = GROCERY_TYPE)
   {
-    $rtn = 0;
+    $rtn = $grpid;
     if(isset($descr)){
       $data = array('typeid' => $typeid, 'descr' => $descr, 'grpid' => $grpid);
       $this->db->where('grpid', $grpid);
@@ -312,24 +292,31 @@
             if($this->db->update('tbl_lstgrp', $data))
                $rtn = $grpid;
          } else if($mode == DELETE_REC) {
+          /*
             $tables = array('tbl_lstgrp', 'tbl_lstitem', 'tbl_shopgrps');  // eliminate shopgrps with reference to this group
             $this->db->where('grpid', $grpid);
             if($this->db->delete($tables))
+            {
               $rtn = $grpid;
+            }
+            */
+          
+            if(!$this->_delete_group_children($grpid))
+            {
+              $this->_logerror('error','_delete_group_children returned false');
+            }
+            
          }
          if ($this->db->affected_rows() > 0) {
            $rtn = $grpid;
-           die('upd_group_rec-1-here we are!');
          }         
       } else {
          if($this->db->insert('tbl_lstgrp', $data))
            $rtn = $this->db->insert_id();  // return last grpid inserted
-         if ($this->db->affected_rows() > 0) {
-           die('upd_group_rec-2-here we are!');  
-         }
       }
       $query->free_result(); // Release memory
-    }  
+    }
+    $this->_logerror('error','update_group_rec return val='.$rtn);
     return $rtn;
   }
   public function get_allitems($limit, $start) {
@@ -385,7 +372,73 @@
      }
      return true;
   } //end clear_groups
-
+  /* when deleting tbl_shopgrps,
+   * 1) store tbl_shopgrps delimted list to string var
+   * 2) convert string list into integers:
+   * 3) delete tbl_shoplist by itemid, userid
+   * 4) delete record from #1
+   */
+  function _delete_group_children($grpid, $userid = TEST_USERID)
+  {
+    $rtn = false;
+    $this->db->select('tbl_shopgrps.grpid as grpid,tbl_shopgrps.descr as descr');
+    $this->db->from('tbl_shopgrps');
+    $this->db->where('userid', $userid);
+    $this->db->where('grpid', $grpid);
+    $query = $this->db->get();
+    $numrow = $query->num_rows();
+    $this->_logerror('error','userid='.$userid.' grpid='.$grpid.' numrow('.$numrow.') pre-get in _delete_group_children');
+    if ($numrow > 0)
+    {
+      
+      $row = $query->row(); 
+      $descr = $row->descr;
+      if(strlen($descr) > 0)
+      {
+        if(strpos($descr,'.') === false && is_numeric($descr))
+        { // if single itemid append delimiter for array_map
+          $descr .= '.';
+        }
+        if(strpos($descr, '.') !== false)
+        {
+          $int_array = array_map("intval", explode('.', $descr));
+          print_r($int_array);
+          if(is_array($int_array))
+          {
+            for($i = 0; $i < count($int_array); $i++)
+            {
+               $itemid = $int_array[$i];
+               $this->db->where('userid', $userid);
+               $this->db->where('itemid', $itemid);
+               $query = $this->db->get('tbl_shoplist');
+               if ($query->num_rows() > 0) { // Update
+//                  $rtn = $this->db->delete('tbl_shoplist');
+                  if ($this->db->_error_message())
+                     $this->_logerror('error','Deletion from tbl_shoplist for itemid='.$itemid);
+                  else
+                     $rtn = true;
+                  $etype = $rtn ? 'error' : 'error';
+                  $this->_logerror($etype,'WM-MSG: from tbl_shoplist for itemid='.$itemid);
+               }
+            }
+          }
+        }
+      }
+    }
+    return $rtn;
+  } // end get_userhist
+  /*
+     * logerror function
+     * @param $which - message level must be 'error', 'debug' or 'error' per CI (see link below)
+     * @param $errmsg - error to log
+     * ref: http://ellislab.com/codeigniter/user-guide/general/errors.html 
+  */
+  function _logerror($which,$errmsg)
+  {
+        $thisclass = basename(__FILE__, '.php');
+        $logmsg = $thisclass.'-'.$errmsg;
+        log_message($which,$logmsg);
+  } // end _logerror
   function get_record($record_id)
   {
      $this->db->where('itemid',$record_id);   //we want the row whose ID matches the value were passing in

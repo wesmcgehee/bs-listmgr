@@ -2,13 +2,16 @@
   define("GROCERY_TYPE",1);
   
 class Lists extends CI_Controller {
-
+    //static $userid = 0;
     public function __construct() 
     {
-        parent::__construct();
-        $this->load->model( 'lists_model' );
-	    $this->load->helper(array('url','html'));
-        //$this->output->enable_profiler(TRUE); 
+       parent::__construct();
+       $this->load->model( 'lists_model' );
+       $this->load->helper(array('url','html'));
+       //$sproc = new siteprocs();
+       //if($userid <= 0)
+       // $userid = $sproc->getLoginId();      
+      //$this->output->enable_profiler(TRUE); 
     }
   
     public function index()
@@ -168,36 +171,40 @@ class Lists extends CI_Controller {
         if(isset($mode)) {
           $grpid = $this->input->post('grpid');
           $itemid = $this->input->post('itmid');
-		  $gdesc = $this->input->post('gdesc');
+	  $gdesc = $this->input->post('gdesc');
           $idesc = $this->input->post('idesc');
-		  $gxval = $this->input->post('gxval');
-		  $ixval = $this->input->post('ixval');
-		  /*
-		   $rtn = 'gxval['.$gxval.']==gdesc['.$gdesc.'] ('. ($gxval == $gdesc ? 'true' : 'false').') ';
-		   $rtn .= 'ixval['.$ixval.']==idesc['.$idesc.'] ('. ($ixval == $idesc ? 'true' : 'false').') ';
-		   die($rtn);
-		  */
-		  $gchg = ($gxval != $gdesc) && (strlen(trim($gdesc)) > 0) && (stripos($gdesc,ADD_NEW_REC) === false);
-		  $ichg = ($ixval != $idesc) && (strlen(trim($idesc)) > 0) && (stripos($idesc,ADD_NEW_REC) === false);
-		  $delgrp = ($mode === DELETE_REC && !$ichg);
-		  $rtn = 'mode['.$mode.'] ';
-		  if($gchg || $delgrp)
-		  {
-			 $updid = $this->lists_model->update_group_rec($mode,$grpid,$gdesc);
-			 $rtn .= 'Updated Group Id('.$updid.')=['.$gdesc.'] DELGRP='.($delgrp) ? 'True ' : 'False ';
-		  } else {
-		     $updid = $grpid;
-		  }
-		  if($updid > 0 && $ichg) {
+	  $gxval = $this->input->post('gxval');
+	  $ixval = $this->input->post('ixval');
+      
+       //$rtn = 'gxval['.$gxval.']==gdesc['.$gdesc.'] ('. ($gxval == $gdesc ? 'true' : 'false').') ';
+       //$rtn .= 'ixval['.$ixval.']==idesc['.$idesc.'] ('. ($ixval == $idesc ? 'true' : 'false').') ';
+      
+	  $gchg = ($gxval != $gdesc) && (strlen(trim($gdesc)) > 0) && (stripos($gdesc,ADD_NEW_REC) === false);
+	  $ichg = ($ixval != $idesc) && (strlen(trim($idesc)) > 0) && (stripos($idesc,ADD_NEW_REC) === false);
+          $delgrp = $mode === DELETE_REC && !$ichg && $itemid == 0; // delete group and all children
+	  $rtn .= 'mode['.$mode.'] delgrp='. $delgrp ? 'yes ' : 'no ';
+	  if($gchg || $delgrp)
+	  {
+             $rtn .= 'Updated Group Id('.$grpid.')=['.$gdesc.'] DELGRP='.($delgrp) ? 'True ' : 'False ';
+die($rtn);	     
+             $updid = $this->lists_model->update_group_rec($mode,$grpid,$gdesc);
+	  } else {
+	     $updid = $grpid;
+	  }
+	  if($updid > 0 && $ichg) {
+	    $rtn .= ' updid('.$updid.') ichg = true';
+/*
               if(!$this->lists_model->update_item($mode,$updid,$itemid,$idesc)){
                 $rtn = 'Error updating item record';
-			  } else {
-				$rtn .= ' Updated Item Id('.$itemid.')=['.$idesc.']';
-			  }
+	      } else {
+		$rtn .= ' Updated Item Id('.$itemid.')=['.$idesc.']';
+   	      }
+*/   	      
           } else {
-            $rtn = 'Error updating group record or no item to update';
-		  }
- 	    }
+            //$rtn .= '****Error updating group record or no item to update';
+	  }
+ 	}
+	die('end-'.$rtn);
         echo $rtn;
     } 
     public function upditem()  
