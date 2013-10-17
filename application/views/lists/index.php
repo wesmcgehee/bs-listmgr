@@ -41,11 +41,6 @@ $(function() {
     $("#mov-edit").on('hidden.bs.modal', function () {
        $(this).data('bs.modal', null);
     });
-    /*
-    $('#grp-descr').change( function() {
-        console.log('grp-descr.change');
-    });
-    */
     $('#mov-dropdown').change(function() {
         $('#mov-descr').show();
         var selData = rtnSelectedIdStr('mov');
@@ -98,69 +93,41 @@ $(function() {
        callPrint('showhere');
    });
    $('#showlist').click(function() {
-           var ar = getUserChkdItems();
-           if(ar.length >= 0){
-                 listArrayToConsole(ar);
-           }
-           var paramdata = {
-                  'piks': ar
-           };                     
-           $('#showhere').empty();
-           $.ajax({
-                  type: 'POST',
-                   url: 'index.php?lists/updpicks',
-                  data: paramdata,
-                 cache: false,
-                 async: false,
-           success: function(data){
-                                $('#showhere').html(data); 
-                                $('#showhere').show();
-                },
-          complete: function (xhr, status) {
-                                if (status === 'error' || !xhr.responseText) {
-                                   showAlert('saveList-Complete-status=error','alert-error');
-                                } else {
-                                   var data = xhr.responseText;
-                                   $('#showhere').html(data).append;
-                                }
-          },
-          error: function(response) {
-                                 showAlert('saveList-Ajax-error: '+response.status + ' ' + response.statusText,'alert-error');
-                        }
-           });                   
-                 
-        });
+        showPrintList(false); // save list if showing
+	var ar = getUserChkdItems();
+	if(ar.length >= 0){
+	      listArrayToConsole(ar);
+	}
+	var paramdata = {
+	       'piks': ar
+	};                     
+	$('#showhere').empty();
+	$.ajax({
+	       type: 'POST',
+		url: 'index.php?lists/updpicks',
+	       data: paramdata,
+	      cache: false,
+	      async: false,
+	success: function(data){
+	     $('#showhere').html(data); 
+	     $('#showhere').show();
+       },
+       complete: function (xhr, status) {
+	     if (status === 'error' || !xhr.responseText) {
+		showAlert('saveList-Complete-status=error','alert-error');
+	     } else {
+		var data = xhr.responseText;
+		$('#showhere').html(data).append;
+	     }
+       },
+       error: function(response) {
+			      showAlert('saveList-Ajax-error: '+response.status + ' ' + response.statusText,'alert-error');
+		     }
+	});                   
+	      
+   });
    $('#prntlist').click(function() {
-        var ar = getUserItemDescr();
-        if(ar.length >= 0){
-          var paramdata = {
-             'qtys': ar
-          };                     
-          $('#showhere').empty();
-          $.ajax({
-           type: 'POST',
-           url: 'index.php?lists/prntsave',
-           data: paramdata,
-           cache: false,
-           async: false,
-          success: function(data){
-                 $('#showhere').html(data); 
-                 $('#showhere').show();
-                 callPrint('showhere');
-           },
-          complete: function (xhr, status) {
-                 if (status === 'error' || !xhr.responseText) {
-                    showAlert('prntsave-complete-status=error','alert-error');
-                 } else {
-                   var data = xhr.responseText;
-                   $('#showhere').html(data).append;
-                 }
-           },
-            error: function(response) {
-                    showAlert('prntsave-error: '+response.status + ' ' + response.statusText,'alert-error');
-           }
-         });
-       }
+       showPrintList(true);
    });
    $('#refresh').click(function() {
        window.location.reload(true);            
@@ -168,6 +135,44 @@ $(function() {
 });
 var gxval = '';  // original grp-descr
 var ixval = '';  // original itm-descr
+function showPrintList(doprint)
+{
+        var qtyarr = getUserItemDescr();
+        if(qtyarr.length >= 0){
+          var paramdata = {
+             'qtyarray': qtyarr,
+	     'showlist': doprint
+          };
+	  console.log('showPrintList('+doprint+')');
+          $('#showhere').empty();
+          $.ajax({
+           type: 'POST',
+           url: 'index.php?lists/savenote',
+           data: paramdata,
+           cache: false,
+           async: false,
+          success: function(data){
+                 $('#showhere').html(data); 
+                 $('#showhere').show();
+		 if (doprint) {
+                   callPrint('showhere');
+		 }
+           },
+          complete: function (xhr, status) {
+                 if (status === 'error' || !xhr.responseText) {
+                    showAlert('savenote-complete-status=error','alert-error');
+                 } else {
+                   var data = xhr.responseText;
+                   $('#showhere').html(data).append;
+                 }
+           },
+            error: function(response) {
+                    showAlert('savenote-error: '+response.status + ' ' + response.statusText,'alert-error');
+           }
+         });
+       }
+    
+}
 function toggleButtons(which)
 {
     var desc = which.value;
@@ -242,7 +247,7 @@ function updChangedFields(mode)
       $('#showhere').empty();
       $.ajax({
        type: 'POST',
-       url: 'index.php?lists/updlist',
+       url: 'index.php?lists/savedits',
        data: param,
        cache: false,
        async: false,

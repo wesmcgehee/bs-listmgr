@@ -292,15 +292,12 @@
             if($this->db->update('tbl_lstgrp', $data))
                $rtn = $grpid;
          } else if($mode == DELETE_REC) {
-          /*
             $tables = array('tbl_lstgrp', 'tbl_lstitem', 'tbl_shopgrps');  // eliminate shopgrps with reference to this group
             $this->db->where('grpid', $grpid);
             if($this->db->delete($tables))
             {
               $rtn = $grpid;
             }
-            */
-          
             if(!$this->_delete_group_children($grpid))
             {
               $this->_logerror('error','_delete_group_children returned false');
@@ -412,7 +409,7 @@
                $this->db->where('itemid', $itemid);
                $query = $this->db->get('tbl_shoplist');
                if ($query->num_rows() > 0) { // Update
-//                  $rtn = $this->db->delete('tbl_shoplist');
+                  $rtn = $this->db->delete('tbl_shoplist');
                   if ($this->db->_error_message())
                      $this->_logerror('error','Deletion from tbl_shoplist for itemid='.$itemid);
                   else
@@ -433,7 +430,7 @@
      * @param $errmsg - error to log
      * ref: http://ellislab.com/codeigniter/user-guide/general/errors.html 
   */
-  function _logerror($which,$errmsg)
+  public function _logerror($which,$errmsg)
   {
         $thisclass = basename(__FILE__, '.php');
         $logmsg = $thisclass.'-'.$errmsg;

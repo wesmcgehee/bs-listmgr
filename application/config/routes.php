@@ -53,13 +53,13 @@ $route['upload'] = 'upload';
 
 $route['404_override'] = 'errors/site_404';
 
-$route['lists/updlist'] = 'lists/updlist';
+$route['lists/savedits'] = 'lists/savedits';
 $route['lists/updpicks'] = 'lists/updpicks';
 $route['lists/gettypes'] = 'lists/gettypes';
 $route['lists/getitems'] = 'lists/getitems';
 $route['lists/getform'] = 'lists/getform';
 $route['lists/getform/(:any)'] = 'lists/getform/$1';
-$route['lists/prntsave'] = 'lists/prntsave';
+$route['lists/savenote'] = 'lists/savenote';
 $route['lists/upditem'] = 'lists/upditem';
 $route['lists/upditem/(:any)'] = 'lists/upditem/$1';
 $route['lists/getgroups'] = 'lists/getgroups';

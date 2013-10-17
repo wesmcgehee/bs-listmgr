@@ -13,26 +13,26 @@ var fname = $( "#fname" ),
     tips = $( ".validateTips" );
     function doLogin()
     {
-		if(loginUser()){
-			//alert('window.location call');
-			window.location = 'http://mangumreunion.com/listmgr/cibs/';
-		} else {
-		   updateTips('Invalid login');
-		   clearTextBox('uname');
-		   clearTextBox('email');
-		}
+        if(loginUser()){
+                //alert('window.location call');
+                window.location = 'http://mangumreunion.com/listmgr/cibs/';
+        } else {
+           updateTips('Invalid login');
+           clearTextBox('uname');
+           clearTextBox('email');
+        }
     }
     function doUpdate()
     {
-       var bValid = validateUserData();		      
+       var bValid = validateUserData();               
        if ( bValid ) {
-	  pdUserData('upd');
+          updUserData('upd');
           window.location = 'http://mangumreunion.com/listmgr/cibs/';
        }
     }
     function doGoHome()
     {
-       window.open('index.php','_self');	
+       window.open('index.php','_self');        
     }
     function updUserData(mode)
     {
@@ -72,51 +72,51 @@ var fname = $( "#fname" ),
               $('#user-area').html(data).append;
               //console.log( 'Ajax-complete-xhr.resonseText='.data);
             }
-                $( "#dlg-edituser" ).wijdialog( "close" );		
+                $( "#dlg-edituser" ).wijdialog( "close" );              
             },
         error: function(response) {
             //console.log('Ajax-error: '+response.status + ' ' + response.statusText);
         }
         });
     }
-	function loginUser()
-	{
+        function loginUser()
+        {
       var rtn = false;
-	  var params = {
+          var params = {
           uname: $('#uname').val(),
           email: $('#email').val()
       };
       $.ajax({
-		type: 'POST',
-		url: 'index.php?login/signon',
-		data: params,
-		cache: false,
-		async: false,
+                type: 'POST',
+                url: 'index.php?login/signon',
+                data: params,
+                cache: false,
+                async: false,
         dataType: 'json',
-		success:
-		  function(data){
-		    //console.log( 'Ajax-no errors' );
+                success:
+                  function(data){
+                    //console.log( 'Ajax-no errors' );
             var pname = data.uname;
             if (typeof pname !== 'undefined') {
                 if(pname.toLowerCase().indexOf(params['uname'].toLowerCase()) != -1){
                    rtn = true;
                 }
             }
-		},
-		beforeSend: function(){
-		    //console.log( 'Ajax-beforeSend' );
-		},
-		complete: function (xhr, status) {
-		    if (status === 'error' || !xhr.responseText) {
-		       //console.log('Complete-status=error');
-		    }
+                },
+                beforeSend: function(){
+                    //console.log( 'Ajax-beforeSend' );
+                },
+                complete: function (xhr, status) {
+                    if (status === 'error' || !xhr.responseText) {
+                       //console.log('Complete-status=error');
+                    }
         },
-		error: function(response) {
-		    //console.log('Ajax-error: '+response.status + ' statusText: ' + response.statusText);
-		}
+                error: function(response) {
+                    //console.log('Ajax-error: '+response.status + ' statusText: ' + response.statusText);
+                }
       });
       return rtn;
-	}
+        }
 
     function validateUserData() {
         var bValid = false;

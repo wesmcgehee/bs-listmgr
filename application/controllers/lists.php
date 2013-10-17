@@ -117,14 +117,15 @@ class Lists extends CI_Controller {
     	echo '<br />';
         exit;
     } 
-    public function prntsave()  
+    public function savenote()  
     {
         $rtn = '';
-        $input = $this->input->post('qtys');
-        if(isset($input) && is_array($input)) {
+        $qtyarray = $this->input->post('qtyarray');
+	$showlist = $this->input->post('showlist');
+        if(isset($qtyarray) && is_array($qtyarray)) {
           $rec = array();
           // build key = itemid and period delimited string of selected qty details for item
-          foreach($input as $itm){
+          foreach($qtyarray as $itm){
             if(array_key_exists($itm['id'],$rec)){
                $rec[$itm['id']] = $itm['str'];
                //print_r($rec[$itm['id']].' '.$rec[$itm['str']]);
@@ -137,7 +138,8 @@ class Lists extends CI_Controller {
           if(!$this->lists_model->update_shoplist($userid, $rec)){
             $rtn = 'Error updating user selected list';
           }
-          $this->showpicks();
+	  if(isset($showlist) && $showlist)
+             $this->showpicks();
         }
         echo $rtn;
     } 
@@ -163,9 +165,10 @@ class Lists extends CI_Controller {
         }
         echo $rtn;
     }
-    public function updlist()  
+    public function savedits()  
     {
         $rtn = '';
+	$updid = 0;
         $mode = $this->input->post('mode');
         //echo 'rtn['.$rtn.'] mode['.$mode.']';
         if(isset($mode)) {
@@ -175,36 +178,32 @@ class Lists extends CI_Controller {
           $idesc = $this->input->post('idesc');
 	  $gxval = $this->input->post('gxval');
 	  $ixval = $this->input->post('ixval');
-      
-       //$rtn = 'gxval['.$gxval.']==gdesc['.$gdesc.'] ('. ($gxval == $gdesc ? 'true' : 'false').') ';
-       //$rtn .= 'ixval['.$ixval.']==idesc['.$idesc.'] ('. ($ixval == $idesc ? 'true' : 'false').') ';
-      
 	  $gchg = ($gxval != $gdesc) && (strlen(trim($gdesc)) > 0) && (stripos($gdesc,ADD_NEW_REC) === false);
 	  $ichg = ($ixval != $idesc) && (strlen(trim($idesc)) > 0) && (stripos($idesc,ADD_NEW_REC) === false);
-          $delgrp = $mode === DELETE_REC && !$ichg && $itemid == 0; // delete group and all children
-	  $rtn .= 'mode['.$mode.'] delgrp='. $delgrp ? 'yes ' : 'no ';
-	  if($gchg || $delgrp)
+          $idel = $mode === DELETE_REC && !$ichg && $itemid > 0;  // one child in the group
+          $gdel = $mode === DELETE_REC && !$ichg && $itemid == 0; // delete group and all children
+	  $rtn .= 'mode['.$mode.'] gdel='. $gdel ? 'yes ' : 'no ';
+	  //$this->lists_model->_logerror('ERROR','lists-controller-['.$rtn.']');
+	  if($gchg || $gdel)
 	  {
-             $rtn .= 'Updated Group Id('.$grpid.')=['.$gdesc.'] DELGRP='.($delgrp) ? 'True ' : 'False ';
-die($rtn);	     
+             $rtn .= 'Updated Group Id('.$grpid.')=['.$gdesc.'] DELGRP='.($gdel) ? 'True ' : 'False ';
              $updid = $this->lists_model->update_group_rec($mode,$grpid,$gdesc);
 	  } else {
 	     $updid = $grpid;
 	  }
-	  if($updid > 0 && $ichg) {
-	    $rtn .= ' updid('.$updid.') ichg = true';
-/*
-              if(!$this->lists_model->update_item($mode,$updid,$itemid,$idesc)){
+	  if(($updid > 0 && $ichg) || $idel) {
+	    $tmp = $ichg ? 'true' : 'false';
+	    $rtn .= '[(ichg='.$tmp.' and updid('.$updid.')!=0 OR idel=true] update item for group';
+            if(!$this->lists_model->update_item($mode,$updid,$itemid,$idesc)){
                 $rtn = 'Error updating item record';
-	      } else {
+            } else {
 		$rtn .= ' Updated Item Id('.$itemid.')=['.$idesc.']';
-   	      }
-*/   	      
+            }
           } else {
-            //$rtn .= '****Error updating group record or no item to update';
+            $rtn .= 'ichg==false && updid==0 no update to items for groupid=='.$grpid;
 	  }
  	}
-	die('end-'.$rtn);
+        $this->lists_model->_logerror('ERROR','lists-controller-['.$rtn.']');
         echo $rtn;
     } 
     public function upditem()  
