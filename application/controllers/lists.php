@@ -2,22 +2,21 @@
   define("GROCERY_TYPE",1);
   
 class Lists extends CI_Controller {
-    //static $userid = 0;
+    //static $userid;
     public function __construct() 
     {
        parent::__construct();
        $this->load->model( 'lists_model' );
        $this->load->helper(array('url','html'));
-       //$sproc = new siteprocs();
-       //if($userid <= 0)
-       // $userid = $sproc->getLoginId();      
-      //$this->output->enable_profiler(TRUE); 
+       $userid = $this->_verify_userid();
+       //$this->output->enable_profiler(TRUE); 
     }
-  
+   
     public function index()
     {
-	    $data['title'] = 'Edit Items';
-        $query = $this->lists_model->get_groups();
+	$data['title'] = 'Edit Items';
+        $userid = $this->_verify_userid();	
+        $query = $this->lists_model->get_groups($userid);
         foreach($query as $grp){
           $grps[$grp->grpid] = $grp->type;
         }
@@ -25,7 +24,7 @@ class Lists extends CI_Controller {
         $query = $this->lists_model->get_grpitems();
         $data['items'] = $query;
         
-        $userid = TEST_USERID;
+        $userid = $this->_verify_userid();
         
         $query = $this->lists_model->get_shopgrps($userid);
         $data['picks'] = $query;
@@ -105,7 +104,8 @@ class Lists extends CI_Controller {
     {
         $gid = $this->input->post('grpid');  //set default in dropdown
         $grps = array();
-        $query = $this->lists_model->get_groups();
+        $userid = $this->_verify_userid();	
+        $query = $this->lists_model->get_groups($userid);	
     	foreach($query as $grp){
     	  $grps[$grp->grpid] = $grp->type;
     	}
@@ -134,7 +134,7 @@ class Lists extends CI_Controller {
             }  
           }
           //print_r($rec);
-          $userid = TEST_USERID;
+          $userid = $this->_verify_userid();
           if(!$this->lists_model->update_shoplist($userid, $rec)){
             $rtn = 'Error updating user selected list';
           }
@@ -157,7 +157,7 @@ class Lists extends CI_Controller {
                $rec[$itm['gd']] = $itm['id'];
             }  
           }
-          $userid = TEST_USERID;
+          $userid = $this->_verify_userid();
           if(!$this->lists_model->update_shoppick($userid, $rec)){
             $rtn = 'Error updating user selected list';
           }
@@ -171,7 +171,9 @@ class Lists extends CI_Controller {
 	$updid = 0;
         $mode = $this->input->post('mode');
         //echo 'rtn['.$rtn.'] mode['.$mode.']';
-        if(isset($mode)) {
+        if(isset($mode))
+	{
+	  $userid = $this->_verify_userid();
           $grpid = $this->input->post('grpid');
           $itemid = $this->input->post('itmid');
 	  $gdesc = $this->input->post('gdesc');
@@ -182,28 +184,29 @@ class Lists extends CI_Controller {
 	  $ichg = ($ixval != $idesc) && (strlen(trim($idesc)) > 0) && (stripos($idesc,ADD_NEW_REC) === false);
           $idel = $mode === DELETE_REC && !$ichg && $itemid > 0;  // one child in the group
           $gdel = $mode === DELETE_REC && !$ichg && $itemid == 0; // delete group and all children
-	  $rtn .= 'mode['.$mode.'] gdel='. $gdel ? 'yes ' : 'no ';
+	  //$rtn .= 'mode['.$mode.'] gdel='. $gdel ? 'yes ' : 'no ';
 	  //$this->lists_model->_logerror('ERROR','lists-controller-['.$rtn.']');
 	  if($gchg || $gdel)
 	  {
-             $rtn .= 'Updated Group Id('.$grpid.')=['.$gdesc.'] DELGRP='.($gdel) ? 'True ' : 'False ';
-             $updid = $this->lists_model->update_group_rec($mode,$grpid,$gdesc);
+             //$rtn .= 'Updated Group Id('.$grpid.')=['.$gdesc.'] DELGRP='.($gdel) ? 'True ' : 'False ';
+             $updid = $this->lists_model->update_group_rec($mode,$userid,$grpid,$gdesc);
 	  } else {
 	     $updid = $grpid;
 	  }
-	  if(($updid > 0 && $ichg) || $idel) {
-	    $tmp = $ichg ? 'true' : 'false';
-	    $rtn .= '[(ichg='.$tmp.' and updid('.$updid.')!=0 OR idel=true] update item for group';
+	  if(($updid > 0 && $ichg) || $idel)
+	  {
+	    //$tmp = $ichg ? 'true' : 'false';
+	    //$rtn .= '[(ichg='.$tmp.' and updid('.$updid.')!=0 OR idel=true] update item for group';
             if(!$this->lists_model->update_item($mode,$updid,$itemid,$idesc)){
                 $rtn = 'Error updating item record';
             } else {
-		$rtn .= ' Updated Item Id('.$itemid.')=['.$idesc.']';
+		$rtn = ' Updated Item Id('.$itemid.')=['.$idesc.']';
             }
-          } else {
-            $rtn .= 'ichg==false && updid==0 no update to items for groupid=='.$grpid;
+          //} else {
+          //  $rtn .= 'ichg==false && updid==0 no update to items for groupid=='.$grpid;
 	  }
  	}
-        $this->lists_model->_logerror('ERROR','lists-controller-['.$rtn.']');
+        //$this->lists_model->_logerror('ERROR','lists-controller-['.$rtn.']');
         echo $rtn;
     } 
     public function upditem()  
@@ -254,7 +257,7 @@ class Lists extends CI_Controller {
       echo "<input type='text' name='searchstr' id='searchstr' value='' maxlength='80' size='80' style='width:80%;'/>";
       echo '<br/>';
 	      
-	      $btnattr = array( 'name' => 'findbtn',
+      $btnattr = array( 'name' => 'findbtn',
 			'id' => 'findbtn',
 			'class' => 'findbtn',
 			'content' => 'Search');
@@ -452,11 +455,12 @@ class Lists extends CI_Controller {
         $this->load->library('table');
         $tmplate = array ( 'table_open'  => '<table id="showpicks" cols="2" border="0" cellpadding="2" cellspacing="1">' );
         $this->table->set_template($tmplate);
-        $query = $this->lists_model->get_groups();
+        $userid = $this->_verify_userid();	
+        $query = $this->lists_model->get_groups($userid);	
         foreach($query as $grp){
           $grps[$grp->grpid] = $grp->type;
         }
-        $userid = TEST_USERID;
+        $userid = $this->_verify_userid();
         $dtail = $this->lists_model->get_shoplist($userid);
         $query = $this->lists_model->get_shopgrps($userid);
         foreach($query as $k => $v){
@@ -496,12 +500,21 @@ class Lists extends CI_Controller {
         else
     	   $grps = array(0 => '--Select--'); // force onchange event
            
-        $query = $this->lists_model->get_groups();
+        $userid = $this->_verify_userid();	
+        $query = $this->lists_model->get_groups($userid);
     	foreach($query as $grp){
     	  $grps[$grp->grpid] = $grp->type;
     	}
     	return $grps;
     }
+    function _verify_userid()
+    {
+       $sproc = new siteprocs();
+       $uid = $sproc->getLoginId();      
+       if($uid <= 0)
+         $this->lists_model->_logerror('ERROR','User id is not set in _verify_userid()');
+      return $uid;	 
+  }
 }
 
 /*

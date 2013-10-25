@@ -165,7 +165,7 @@
      $this->db->order_by('uname'); 
      $query = $this->db->get();
      return $query->result();
-  } //end get_lsttypes
+  } //end get_allusers
 
   `uname`
   `fname`

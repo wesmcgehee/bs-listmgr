@@ -1,10 +1,14 @@
 <?php
   class Lists_model extends CI_Model {
-  
+  /* Todo:
+   * 1) Make all tbl_lsttype, tbl_lstgrp, tbl_lstitem userid-specific for more generic use
+   * 2) Check out the static qulifier as well as the deeper oop stuff for php
+  */
   public function __construct()
   {
    $this->load->database();
    $this->load->helper('date');
+   $this->load->library('siteprocs'); // for common string functions
   }
 
   public function get_lsttypes() {
@@ -16,10 +20,12 @@
      return $query->result();
   } //end get_lsttypes
 
-  public function get_groups($typeid = GROCERY_TYPE) {
+  public function get_groups($userid = 0, $typeid = GROCERY_TYPE) {
      $query = array();
      $this->db->select('tbl_lstgrp.grpid as grpid,tbl_lstgrp.descr as type');
      $this->db->from('tbl_lstgrp');
+     if($userid > 0)
+        $query = $this->db->where('userid',$userid);
      if($typeid > 0)
         $query = $this->db->where('typeid',$typeid);
      else
@@ -279,7 +285,7 @@
    * Default is 2 recs with 1 being a group record and 2 being an item
    * return: grpid (new if an insert)
   */
-  public function update_group_rec($mode, $grpid, $descr, $typeid = GROCERY_TYPE)
+  public function update_group_rec($mode, $userid, $grpid, $descr, $typeid = GROCERY_TYPE)
   {
     $rtn = $grpid;
     if(isset($descr)){
@@ -298,9 +304,11 @@
             {
               $rtn = $grpid;
             }
-            if(!$this->_delete_group_children($grpid))
+            if(!$this->_delete_group_children($grpid, $userid)) // clean up children in tbl_shoplist -- no grpid link -- indirect link
             {
               $this->_logerror('error','_delete_group_children returned false');
+            } else {
+              $this->_logerror('error','_delete_group_children returned true');
             }
             
          }
@@ -313,7 +321,7 @@
       }
       $query->free_result(); // Release memory
     }
-    $this->_logerror('error','update_group_rec return val='.$rtn);
+    $this->_logerror('error','update_group_rec returning to controller (grpid) val='.$rtn);
     return $rtn;
   }
   public function get_allitems($limit, $start) {
@@ -378,18 +386,23 @@
   function _delete_group_children($grpid, $userid = TEST_USERID)
   {
     $rtn = false;
+    /*
     $this->db->select('tbl_shopgrps.grpid as grpid,tbl_shopgrps.descr as descr');
     $this->db->from('tbl_shopgrps');
     $this->db->where('userid', $userid);
     $this->db->where('grpid', $grpid);
-    $query = $this->db->get();
-    $numrow = $query->num_rows();
-    $this->_logerror('error','userid='.$userid.' grpid='.$grpid.' numrow('.$numrow.') pre-get in _delete_group_children');
-    if ($numrow > 0)
+    */
+    $sql = 'select * from tbl_shopgrps where userid = ? and grpid = ?'; 
+    $query = $this->db->query($sql, array($userid, $grpid));
+    print_r('num_rows='.$query->num_rows());
+    if (isset($query)) 
     {
-      
-      $row = $query->row(); 
-      $descr = $row->descr;
+      $descr = '';
+      foreach ($query->result() as $row)
+      {
+          echo 'result row='.$row->descr;
+          $descr = $row->descr;
+      }    
       if(strlen($descr) > 0)
       {
         if(strpos($descr,'.') === false && is_numeric($descr))
@@ -399,7 +412,7 @@
         if(strpos($descr, '.') !== false)
         {
           $int_array = array_map("intval", explode('.', $descr));
-          print_r($int_array);
+          //print_r($int_array);
           if(is_array($int_array))
           {
             for($i = 0; $i < count($int_array); $i++)
@@ -409,6 +422,8 @@
                $this->db->where('itemid', $itemid);
                $query = $this->db->get('tbl_shoplist');
                if ($query->num_rows() > 0) { // Update
+                  $this->db->where('userid', $userid);
+                  $this->db->where('itemid', $itemid);
                   $rtn = $this->db->delete('tbl_shoplist');
                   if ($this->db->_error_message())
                      $this->_logerror('error','Deletion from tbl_shoplist for itemid='.$itemid);
