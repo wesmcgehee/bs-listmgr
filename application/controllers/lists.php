@@ -16,16 +16,13 @@ class Lists extends CI_Controller {
     {
 	$data['title'] = 'Edit Items';
         $userid = $this->_verify_userid();	
-        $query = $this->lists_model->get_groups($userid);
+        $query = $this->lists_model->get_groups($userid, GROCERY_TYPE);
         foreach($query as $grp){
           $grps[$grp->grpid] = $grp->type;
         }
         $data['groups'] = $grps;
-        $query = $this->lists_model->get_grpitems();
+        $query = $this->lists_model->get_grpitems($userid);
         $data['items'] = $query;
-        
-        $userid = $this->_verify_userid();
-        
         $query = $this->lists_model->get_shopgrps($userid);
         $data['picks'] = $query;
         $this->load->view('templates/header', $data);
@@ -40,8 +37,9 @@ class Lists extends CI_Controller {
        $descr = $this->input->post('descr');
        if ($typid) 
        {
+           $userid = $this->_verify_userid();	
            $typs = array(0 => ADD_NEW_REC);
-           $typitems = $this->lists_model->get_lsttypes($typeid);
+           $typitems = $this->lists_model->get_lsttypes($userid, GROCERY_TYPE);
            foreach($typitems as $typ){
              $typs[$typ->typeid] = $typ->tdescr;
            }
@@ -82,10 +80,11 @@ class Lists extends CI_Controller {
     function getitems()  
     {
       $grpid = $this->input->post('grpid');
-      if ($grpid) 
+      $userid = $this->_verify_userid();	
+      if ($grpid && $userid) 
       {
         $itms = array(0 => ADD_NEW_REC);
-        $grpitems = $this->lists_model->get_grpitems($grpid);
+        $grpitems = $this->lists_model->get_grpitems($userid, $grpid);
         foreach($grpitems as $itm){
           $itms[$itm->itemid] = $itm->item;
         }
@@ -105,7 +104,7 @@ class Lists extends CI_Controller {
         $gid = $this->input->post('grpid');  //set default in dropdown
         $grps = array();
         $userid = $this->_verify_userid();	
-        $query = $this->lists_model->get_groups($userid);	
+        $query = $this->lists_model->get_groups($userid, GROCERY_TYPE);	
     	foreach($query as $grp){
     	  $grps[$grp->grpid] = $grp->type;
     	}
@@ -456,7 +455,7 @@ class Lists extends CI_Controller {
         $tmplate = array ( 'table_open'  => '<table id="showpicks" cols="2" border="0" cellpadding="2" cellspacing="1">' );
         $this->table->set_template($tmplate);
         $userid = $this->_verify_userid();	
-        $query = $this->lists_model->get_groups($userid);	
+        $query = $this->lists_model->get_groups($userid, GROCERY_TYPE);	
         foreach($query as $grp){
           $grps[$grp->grpid] = $grp->type;
         }
@@ -483,16 +482,7 @@ class Lists extends CI_Controller {
         }
 	    echo $this->table->generate();
     }
-    
-    function _get_grpitms($grpid=0)
-    {
-        $itms = array(0 => ADD_NEW_REC);
-        $grpitems = $this->lists_model->get_grpitems($grpid);
-        foreach($grpitems as $itm){
-          $itms[$itm->itemid] = $itm->item;
-        }
-    	return $itms;
-    }
+   
     function _get_allgrps($addnew=true)
     {
         if($addnew)
@@ -501,7 +491,7 @@ class Lists extends CI_Controller {
     	   $grps = array(0 => '--Select--'); // force onchange event
            
         $userid = $this->_verify_userid();	
-        $query = $this->lists_model->get_groups($userid);
+        $query = $this->lists_model->get_groups($userid, GROCERY_TYPE);
     	foreach($query as $grp){
     	  $grps[$grp->grpid] = $grp->type;
     	}
@@ -516,54 +506,3 @@ class Lists extends CI_Controller {
       return $uid;	 
   }
 }
-
-/*
-    public function getanswer()
-    {
-        $reply = '';
-        $options = $this->input->post('options');
-        $ajaxcall = false;
-        $data['title'] = 'Search with Wildcard';
-        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
-           $ajaxcall = true;
-        }
-        if($ajaxcall){
-           if(isset($strtofind) && strlen($strtofind) > 1) {
-              $query = $this->lists_model->find_like($strtofind);
-              if($query) {
-                 $tmplate = array ('table_open'  => '<table id="gridtable" border="1" cellpadding="1" cellspacing="1" class="ui-widget ui-widget-content">' );
-                 $this->table->set_template($tmplate);
-                 $this->table->set_empty('&nbsp;');
-                 $tbl_heading = array(
-                         '0' => array('data' => 'TId', 'style' => 'text-align: center','style' => 'width: 10'),
-                         '1' => array('data' => 'GId', 'style' => 'text-align: center', 'style' => 'width: 10'),
-                         '2' => array('data' => 'GDescrip', 'style' => 'width: 100px', 'style' => 'white-space: nowrap;'),
-                         '3' => array('data' => 'Id', 'style' => 'text-align: center', 'style' => 'width: 10'),
-                         '4' => array('data' => 'Description', 'style' => 'width: 200px', 'style' => 'white-space: nowrap;'),
-                         '5' => array('data' => 'Edit', 'style' => 'text-align: center'));
-                 $this->table->set_heading($tbl_heading);
-                 foreach($query as $row) {
-                    $txt = $row->tid.'</td>';
-                    $txt .= '<td>'.$row->gid.'</td><td>'.$row->gdescr.'</td>';
-                    $txt .= '<td>'.$row->iid.'</td><td>'.$row->idescr.'</td>';
-                    $act = '<td><a class="editthis" href="#" onclick="javascript:displayItem('.$row->gid.','.$row->iid.',\''.$row->idescr.'\')">        <img src="'.base_url().'images/edit.gif" width="12" height="12"/>         </a>';
-                    $this->table->add_row($txt.$act);
-                 }
-                 echo $this->table->generate();
-              }
-              else {
-                $reply = 'nothing found';
-              }
-           } else {
-              $reply = 'nothing sent to find';
-           }
-           if(strlen($reply) > 0)
-              echo $reply;
-        } else {
-           $this->load->view('templates/header', $data);
-           $this->load->view('lists/itemfind',$data);
-           $this->load->view('templates/footer');
-        }
-    }
-    
-*/

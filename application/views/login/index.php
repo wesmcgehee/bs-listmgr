@@ -14,16 +14,18 @@
     <div class="modal-dialog">
       <div class="modal-content">
           <div class="modal-header">
-            <h3 class="form-signin-heading">Please sign in</h3>
+            <h3 class="form-heading">Please sign in</h3>
           </div>
-          <form class="frmformat">
+           <form class="input-medium frmformat" role="form">
             <fieldset>
-             <input type="text" name="uname" id="uname" class="form-control" placeholder="Username" autofocus>
-             <br />
-             <input type="text" name="email" id="email" class="form-control" placeholder="Email address">
-             <div class="checkbox pull-left">
-               <label> <input type="checkbox" value=""> Remember me </label>
-             </div>
+              <div class="form-group">
+                <input type="text" name="uname" id="uname" class="form-control" placeholder="Username" autofocus>
+                <br />
+                <input type="text" name="email" id="email" class="form-control" placeholder="Email address">
+                <div class="checkbox pull-left">
+                  <label> <input type="checkbox" value=""> Remember me </label>
+                </div>
+              </div>  
             </fieldset>
           </form>
           <div class="modal-footer">
@@ -31,6 +33,7 @@
           </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
+ </div>
 <!--  <div class="contentwrapper"> -->
 <!--
     <div id="user-area"></div>

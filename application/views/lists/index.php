@@ -365,7 +365,7 @@ function updItemRecord(mode)
        },
       complete: function (xhr, status) {
                  if (status === 'error' || !xhr.responseText) {
-                        showAlert('updItemRecord-Complete-status with error','alert-error');
+                    showAlert('updItemRecord-Complete-status with error','alert-error');
                  }
          },
       error: function(response) {
@@ -492,46 +492,46 @@ function getUserItemDescr()
 }
 </script>
    <div id="leftcolumn" class="column">
-      <div class="innertube">
+     <div class="innertube">
         <button id="refresh" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
         <button id="editlist" data-toggle="modal" data-target="#pop-edit" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Edit</button>
         <button id="showlist" class="btn btn-primary"><span class="glyphicon glyphicon-list-alt"></span> List</button>
         <button id="prntlist" class="btn btn-primary"><span class="glyphicon glyphicon-print"></span> Print</button>
-      </div>
-      <div class="innercolumn">
-            <div id="accordionResizer" style="padding: 1px; height: 90%;" class="ui-widget-content">
+     </div>
+     <div class="innercolumn">
+          <div id="accordionResizer" style="padding: 1px; height: 90%;" class="ui-widget-content">
           <div id="accordion">
-                 <?php foreach($groups as $k => $v): 
-                         echo '<h3><a href="#sec-'.$k.'">'.$v.'</a></h3>';
-                     $cnt = 0;
-                     foreach($items as $row):
-                   if($cnt == 0){
-                      echo '<div>'; 
-                      $cnt++;
-                   }
-                           if($row->grpid == $k) {
-                        $checked = '';
-                        foreach($picks as $key => $val){
-                          if($key == $k)
-                          {
-                            if(stripos($val, '.'.$row->itemid.'.') !== false){
-                              $checked = 'checked=checked';
-                               break;
-                             }
-                           }
-                        }
-                            echo '<input id="'.$k.'.'.$row->itemid.'" type="checkbox" '.$checked.' />';
-                            echo '<label style="font-weight: normal;" for="'.'g.'.$k.'.c.'.$row->itemid.'">'.$row->item.'</label>';
-                         }
-                     endforeach; 
+             <?php foreach($groups as $k => $v): 
+                 echo '<h3><a href="#sec-'.$k.'">'.$v.'</a></h3>';
+                 $cnt = 0;
+                 foreach($items as $row):
+			if($cnt == 0){
+			   echo '<div>'; 
+			   $cnt++;
+			}
+			if($row->grpid == $k) {
+			   $checked = '';
+			   foreach($picks as $key => $val){
+			       if($key == $k)
+			       {
+				 if(stripos($val, '.'.$row->itemid.'.') !== false){
+				   $checked = 'checked=checked';
+				    break;
+				  }
+			       }
+			   }
+			   echo '<input id="'.$k.'.'.$row->itemid.'" type="checkbox" '.$checked.' />';
+			   echo '<label style="font-weight: normal;" for="'.'g.'.$k.'.c.'.$row->itemid.'">'.$row->item.'</label>';
+			}
+                 endforeach; 
                  if($cnt > 0) { 
-                       echo '</div>';  //atleast one item for group
+                   echo '</div>';  //atleast one item for group
                  }
-                     $cnt = 0; 
-                 endforeach; ?> 
-              </div>
-            </div>
-      </div>
+                 $cnt = 0; 
+             endforeach; ?> 
+           </div>
+        </div>
+     </div>
    </div>
    <div id="midcolumn" class="column">
       <div class="innertube">
